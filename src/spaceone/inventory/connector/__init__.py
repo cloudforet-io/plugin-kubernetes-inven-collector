@@ -1,1 +1,1 @@
-from spaceone.inventory.connector.workload.pod.pod import PodConnector
+from spaceone.inventory.connector.workload.pod import PodConnector

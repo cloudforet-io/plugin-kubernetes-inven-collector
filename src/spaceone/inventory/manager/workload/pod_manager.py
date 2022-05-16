@@ -1,8 +1,7 @@
-import time
 import logging
 
 from spaceone.inventory.libs.manager import KubernetesManager
-from spaceone.inventory.connector.workload.pod.pod import PodConnector
+from spaceone.inventory.connector.workload.pod import PodConnector
 from spaceone.inventory.model.workload.pod.cloud_service import PodResponse, PodResource
 from spaceone.inventory.model.workload.pod.cloud_service_type import CLOUD_SERVICE_TYPES
 from spaceone.inventory.model.workload.pod.data import Pod
