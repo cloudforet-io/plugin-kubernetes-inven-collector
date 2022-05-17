@@ -2,6 +2,12 @@ from schematics import Model
 from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
 
 
+# Developer defined model
+class Labels(Model):
+    key = StringType(serialize_when_none=False)
+    value = StringType(serialize_when_none=False)
+
+
 class ResourceLimits(Model):
     limits = StringType(serialize_when_none=False)
     readiness_probe = StringType(serialize_when_none=False)
@@ -132,15 +138,21 @@ class Container(Model):
     working_dir = StringType(serialize_when_none=False)
 
 
+# Developer defined model
+class Annotations(Model):
+    key = StringType(serialize_when_none=False)
+    value = StringType(serialize_when_none=False)
+
+
 class ObjectMeta(Model):
-    annotations = DictType(StringType, serialize_when_none=False)
+    annotations = ListType(ModelType(Annotations), serialize_when_none=False)
     creation_timestamp = DateTimeType(serialize_when_none=False)
     deletion_grace_period_seconds = StringType(serialize_when_none=False)
     deletion_timestamp = DateTimeType(serialize_when_none=False)
     finalizers = StringType(serialize_when_none=False)
     generate_name = StringType(serialize_when_none=False)
     generation = StringType(serialize_when_none=False)
-    labels = DictType(StringType, serialize_when_none=False)
+    labels = ListType(ModelType(Labels), serialize_when_none=False)
     name = StringType(serialize_when_none=False)
     namespace = StringType(serialize_when_none=False)
     uid = StringType(serialize_when_none=False)
@@ -172,6 +184,12 @@ class NodeAffinity(Model):
     required_during_scheduling_ignored_during_execution = ModelType(NodeSelector, serialize_when_none=False)
 
 
+# Developer defined model
+class MatchLabel(Model):
+    key = StringType(serialize_when_none=False)
+    value = StringType(serialize_when_none=False)
+
+
 class LabelSelectorRequirement(Model):
     key = StringType(serialize_when_none=False)
     operator = StringType(serialize_when_none=False)
@@ -180,7 +198,7 @@ class LabelSelectorRequirement(Model):
 
 class LabelSelector(Model):
     match_expressions = ListType(ModelType(LabelSelectorRequirement), serialize_when_none=False)
-    match_labels = DictType(StringType, serialize_when_none=False)
+    match_labels = ListType(ModelType(MatchLabel))
 
 
 class PodAffinityTerm(Model):
@@ -547,7 +565,7 @@ class PodSpec(Model):
     image_pull_secrets = ModelType(LocalObjectReference, serialize_when_none=False)
     init_containers = ListType(ModelType(Container), serialize_when_none=False)
     node_name = StringType(serialize_when_none=False)
-    node_selector = DictType(StringType, serialize_when_none=False)
+    node_selector = ListType(ModelType(Labels), serialize_when_none=False)
     os = ModelType(PodOS, serialize_when_none=False)
     preemption_policy = StringType(serialize_when_none=False)
     priority = IntType(serialize_when_none=False)

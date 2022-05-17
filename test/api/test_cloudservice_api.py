@@ -1,31 +1,38 @@
 import os
 import unittest
-import yaml
 
 from spaceone.core.unittest.runner import RichTestRunner
 from spaceone.tester import TestCase, print_json
 
 KUBECONFIG = os.environ.get('KUBECONFIG', None)
+CLUSTER_NAME = os.environ.get('CLUSTER_NAME', None)
+TOKEN = os.environ.get('TOKEN', None)
+SERVER = os.environ.get('SERVER', None)
+CERTIFICATE_AUTHORITY_DATA = os.environ.get('CERTIFICATE_AUTHORITY_DATA', None)
 
 
-if KUBECONFIG is None:
+if CLUSTER_NAME is None or TOKEN is None or SERVER is None or CERTIFICATE_AUTHORITY_DATA is None:
     print("""
         ##################################################
         # ERROR 
         #
-        # Configure your Kubeconfig first
+        # Configure your Credentials first
 
         ##################################################
-        export KUBECONFIG="<PATH>" 
+        export CLUSTER_NAME="Your Cluster Name"
+        export TOKEN="Your Service Account Token"
+        export SERVER="Your Kube API Server Endpoint"
+        export CERTIFICATE_AUTHORITY_DATA="Your kube cluster Certification"
     """)
     exit
 
-
+'''
 def _get_credentials():
     with open(KUBECONFIG) as yaml_file:
         dict_file = yaml.load(yaml_file, Loader=yaml.FullLoader)
     print(f'kubeconfig => {dict_file}')
     return dict_file
+'''
 
 
 class TestCollector(TestCase):
@@ -47,11 +54,17 @@ class TestCollector(TestCase):
         options = {"cloud_service_types": ["WorkLoad"]}
             }
         '''
+        print(f'======================= start test collect! ===========================')
         options = {
         }
         filter = {}
-        secret_data = _get_credentials()
-        print(f'======================= test client loader ===========================')
+        secret_data = {
+            "cluster_name": CLUSTER_NAME,
+            "certificate_authority_data": CERTIFICATE_AUTHORITY_DATA,
+            "server": SERVER,
+            "token": TOKEN
+        }
+
         print(f'secret_data => {secret_data}')
         resource_stream = self.inventory.Collector.collect({'options': options, 'secret_data': secret_data,
                                                             'filter': filter})

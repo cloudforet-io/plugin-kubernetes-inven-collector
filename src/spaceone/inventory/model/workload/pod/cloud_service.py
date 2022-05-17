@@ -24,12 +24,14 @@ pod_metadata_base_meta = ItemDynamicLayout.set_fields('Metadata', root_path='dat
     TextDyField.data_source('Generation', 'generation')
 ])
 
-pod_metadata_annotations_meta = ItemDynamicLayout.set_fields('Annotations', root_path='data.metadata', fields=[
-    DictDyField.data_source('Annotations', 'annotations')
+pod_metadata_annotations_meta = SimpleTableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
 ])
 
-pod_metadata_labels_meta = SimpleTableDynamicLayout.set_fields('Labels', root_path='data.metadata', fields=[
-    DictDyField.data_source('Labels', 'labels')
+pod_metadata_labels_meta = SimpleTableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
 ])
 
 pod_metadata_meta = ListDynamicLayout.set_layouts('Metadata', layouts=[pod_metadata_base_meta,
@@ -76,8 +78,9 @@ pod_spec_base_meta = ItemDynamicLayout.set_fields('Spec', root_path='data.spec',
     ListDyField.data_source('Tolerations', 'tolerations')
 ])
 
-pod_spec_node_selector_meta = ItemDynamicLayout.set_fields('Node Selector', root_path='data.spec', fields=[
-    DictDyField.data_source('Node Selector', 'node_selector')
+pod_spec_node_selector_meta = SimpleTableDynamicLayout.set_fields('Node Selector', root_path='data.spec.node_selector', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
 ])
 
 pod_spec_dns_meta = ItemDynamicLayout.set_fields('DNS Config', root_path='data.spec', fields=[
