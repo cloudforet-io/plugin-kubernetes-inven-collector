@@ -53,6 +53,8 @@ class PodManager(KubernetesManager):
                 ##################################
                 pod_name = pod.metadata.name
                 cluster_name = self._get_cluster_name(secret_data)
+                region = 'global'
+
 
                 ##################################
                 # 2. Make Base Data
@@ -73,7 +75,7 @@ class PodManager(KubernetesManager):
                 pod_resource = PodResource({
                     'name': pod_name,
                     'account': cluster_name,
-                    'region_code': 'global',
+                    'region_code': region,
                     'data': pod_data,
                     'reference': pod_data.reference()
                 })
@@ -81,7 +83,7 @@ class PodManager(KubernetesManager):
                 ##################################
                 # 4. Make Collected Region Code
                 ##################################
-                self.set_region_code('global')
+                self.set_region_code(region)
 
                 ##################################
                 # 5. Make Resource Response Object
