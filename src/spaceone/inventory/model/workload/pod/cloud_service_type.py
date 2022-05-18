@@ -23,7 +23,7 @@ cst_pod.is_major = True
 cst_pod.labels = ['Container']
 cst_pod.is_primary = True
 cst_pod.tags = {
-    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/Pod.svg',
+    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/pod.svg',
 }
 
 cst_pod._metadata = CloudServiceTypeMeta.set_meta(
