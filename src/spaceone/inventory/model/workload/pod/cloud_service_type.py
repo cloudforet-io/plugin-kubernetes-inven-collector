@@ -20,7 +20,7 @@ cst_pod.group = 'WorkLoad'
 cst_pod.service_code = 'Pod'
 cst_pod.is_primary = True
 cst_pod.is_major = True
-cst_pod.labels = ['Compute', 'Container']
+cst_pod.labels = ['Container']
 cst_pod.is_primary = True
 cst_pod.tags = {
     'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/Pod.svg',
