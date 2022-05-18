@@ -16,11 +16,11 @@ count_by_cluster_conf = os.path.join(current_dir, 'widget/count_by_cluster.yml')
 cst_pod = CloudServiceTypeResource()
 cst_pod.name = 'Pod'
 cst_pod.provider = 'kubernetes'
-cst_pod.group = 'Workload'
+cst_pod.group = 'WorkLoad'
 cst_pod.service_code = 'Pod'
 cst_pod.is_primary = True
 cst_pod.is_major = True
-cst_pod.labels = ['Compute']
+cst_pod.labels = ['Compute', 'Container']
 cst_pod.is_primary = True
 cst_pod.tags = {
     'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/Pod.svg',
