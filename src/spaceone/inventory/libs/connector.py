@@ -37,8 +37,9 @@ class KubernetesConnector(BaseConnector):
 
         configuration = client.Configuration()
         loader.load_and_set(configuration)
-        config = client.ApiClient(configuration)
-        self.client = client.CoreV1Api(config)
+        self.config = client.ApiClient(configuration)
+        self.core_v1_client = client.CoreV1Api(self.config)
+        self.apps_v1_client = client.AppsV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:

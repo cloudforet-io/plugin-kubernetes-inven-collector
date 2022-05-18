@@ -79,14 +79,13 @@ class KubernetesManager(BaseManager):
 
     @staticmethod
     def convert_labels_format(labels):
-        _LOGGER.debug(f'labels => {labels}')
         convert_labels = []
-        for k, v in labels.items():
-            convert_labels.append({
-                'key': k,
-                'value': v
-            })
-        _LOGGER.debug(f'convert_labels => {convert_labels}')
+        if labels is not None:
+            for k, v in labels.items():
+                convert_labels.append({
+                    'key': k,
+                    'value': v
+                })
         return convert_labels
 
     @staticmethod
@@ -141,3 +140,19 @@ class KubernetesManager(BaseManager):
 
         return None
 
+    @staticmethod
+    def get_cluster_name(secret_data):
+        """
+        Get cluster name from secret_data(kubeconfig)
+        :param secret_data:
+        :return:
+        """
+        cluster_name = ''
+        current_context = secret_data.get('current-context', '')
+        list_contexts = secret_data.get('contexts', [])
+
+        for context in list_contexts:
+            if current_context == context.get('name', ''):
+                cluster_name = context.get('context', {}).get('cluster', '')
+
+        return cluster_name

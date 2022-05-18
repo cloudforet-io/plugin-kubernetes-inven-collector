@@ -1,20 +1,21 @@
 import logging
 
 from spaceone.inventory.libs.manager import KubernetesManager
-from spaceone.inventory.connector.workload.pod import PodConnector
-from spaceone.inventory.model.workload.pod.cloud_service import PodResponse, PodResource
-from spaceone.inventory.model.workload.pod.cloud_service_type import CLOUD_SERVICE_TYPES
-from spaceone.inventory.model.workload.pod.data import Pod
+from spaceone.inventory.connector.cluster.namespace import NamespaceConnector
+from spaceone.inventory.model.cluster.namespace.cloud_service import NamespaceResource, NamespaceResponse
+from spaceone.inventory.model.cluster.namespace.cloud_service_type import CLOUD_SERVICE_TYPES
+from spaceone.inventory.model.cluster.namespace.data import Namespace
+
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class PodManager(KubernetesManager):
-    connector_name = 'PodConnector'
+class NamespaceManager(KubernetesManager):
+    connector_name = 'NamespaceConnector'
     cloud_service_types = CLOUD_SERVICE_TYPES
 
     def collect_cloud_service(self, params):
-        _LOGGER.debug(f'** POD Start **')
+        _LOGGER.debug(f'** Namespace Start **')
         """
         Args:
             params:
@@ -36,48 +37,46 @@ class PodManager(KubernetesManager):
         # 0. Gather All Related Resources
         # List all information through connector
         ##################################
-        pod_conn: PodConnector = self.locator.get_connector(self.connector_name, **params)
-        list_all_pod = pod_conn.list_pod()
-        #_LOGGER.debug(f'list_all_pod => {list_all_pod}')
-        """
-        <class 'kubernetes.client.models.v1_pod.V1Pod'>
-        'V1Pod' object is not iterable
-        So object cannot convert by schematics
-        """
+        namespace_conn: NamespaceConnector = self.locator.get_connector(self.connector_name, **params)
+        list_all_namespace = namespace_conn.list_namespace()
+        #_LOGGER.debug(f'list_all_deployment => {list_all_deployment}')
 
-        for pod in list_all_pod:
+        for namespace in list_all_namespace:
             try:
-                #_LOGGER.debug(f'pod => {pod.to_dict()}')
+                #_LOGGER.debug(f'deployment => {deployment.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
-                pod_name = pod.metadata.name
+                namespace_name = namespace.metadata.name
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-
+                #_LOGGER.debug(f'node => {node}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
                 # key:value type data need to be processed separately
-                raw_data = pod.to_dict()
-                raw_data['metadata']['annotations'] = self.convert_labels_format(raw_data.get('metadata', {}).get('annotations', {}))
-                raw_data['metadata']['labels'] = self.convert_labels_format(raw_data.get('metadata', {}).get('labels', {}))
-                raw_data['spec']['node_selector'] = self.convert_labels_format(raw_data.get('spec', {}).get('node_selector', {}))
-                raw_data['uid'] = raw_data['metadata']['uid']
+                # Convert object to dict
+                raw_data = namespace.to_dict()
+                raw_readonly = namespace.to_dict()
+                raw_data['metadata']['annotations'] = self.convert_labels_format(
+                    raw_readonly.get('metadata', {}).get('annotations', {}))
+                raw_data['metadata']['labels'] = self.convert_labels_format(
+                    raw_readonly.get('metadata', {}).get('labels', {}))
+                raw_data['uid'] = raw_readonly['metadata']['uid']
 
-                pod_data = Pod(raw_data, strict=False)
-                _LOGGER.debug(f'pod_data => {pod_data.to_primitive()}')
+                namespace_data = Namespace(raw_data, strict=False)
+                _LOGGER.debug(f'namespace_data => {namespace_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
                 ##################################
-                pod_resource = PodResource({
-                    'name': pod_name,
+                namespace_resource = NamespaceResource({
+                    'name': namespace_name,
                     'account': cluster_name,
                     'region_code': region,
-                    'data': pod_data,
-                    'reference': pod_data.reference()
+                    'data': namespace_data,
+                    'reference': namespace_data.reference()
                 })
 
                 ##################################
@@ -89,12 +88,12 @@ class PodManager(KubernetesManager):
                 # 5. Make Resource Response Object
                 # List of InstanceResponse Object
                 ##################################
-                collected_cloud_services.append(PodResponse({'resource': pod_resource}))
+                collected_cloud_services.append(NamespaceResponse({'resource': namespace_resource}))
 
             except Exception as e:
                 _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'WorkLoad', 'Pod', pod_name)
+                error_response = self.generate_resource_error_response(e, 'WorkLoad', 'Namespace', pod_name)
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
