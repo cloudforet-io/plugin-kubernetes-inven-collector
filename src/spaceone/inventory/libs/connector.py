@@ -40,6 +40,7 @@ class KubernetesConnector(BaseConnector):
         self.config = client.ApiClient(configuration)
         self.core_v1_client = client.CoreV1Api(self.config)
         self.apps_v1_client = client.AppsV1Api(self.config)
+        self.networking_v1_client = client.NetworkingV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:

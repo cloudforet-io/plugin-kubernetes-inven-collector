@@ -612,3 +612,19 @@ class PodSpec(Model):
 class PodTemplateSpec(Model):
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     spec = ModelType(PodSpec, serialize_when_none=False)
+
+
+class PortStatus(Model):
+    error = StringType(serialize_when_none=False)
+    port = StringType(serialize_when_none=False)
+    protocol = StringType(choices=('TCP', 'UDP', 'SCTP'), serialize_when_none=False)
+
+
+class LoadBalancerIngress(Model):
+    hostname = StringType(serialize_when_none=False)
+    ip = StringType(serialize_when_none=False)
+    ports = ListType(ModelType(PortStatus), serialize_when_none=False)
+
+
+class LoadBalancerStatus(Model):
+    ingress = ListType(ModelType(LoadBalancerIngress), serialize_when_none=False)
