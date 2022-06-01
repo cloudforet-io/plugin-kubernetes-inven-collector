@@ -4,7 +4,7 @@ from spaceone.inventory.libs.schema.base import ObjectMeta, Labels, LoadBalancer
 
 
 class TypedLocalObjectReference(Model):
-    apiGroup = StringType(serialize_when_none=False)
+    api_group = StringType(serialize_when_none=False)
     kind = StringType(serialize_when_none=False)
     name = StringType(serialize_when_none=False)
 
@@ -27,7 +27,7 @@ class IngressBackend(Model):
 class HTTPIngressPath(Model):
     backend = ModelType(IngressBackend, serialize_when_none=False)
     path = StringType(serialize_when_none=False)
-    pathType = StringType(serialize_when_none=False)
+    path_type = StringType(serialize_when_none=False)
 
 
 class HTTPIngressRuleValue(Model):
@@ -41,18 +41,18 @@ class IngressRule(Model):
 
 class IngressTLS(Model):
     hosts = ListType(StringType(), serialize_when_none=False)
-    secretName = StringType(serialize_when_none=False)
+    secret_name = StringType(serialize_when_none=False)
 
 
 class IngressSpec(Model):
-    defaultBackend = ModelType(IngressBackend, serialize_when_none=False)
-    ingressClassName = StringType(serialize_when_none=False)
+    default_backend = ModelType(IngressBackend, serialize_when_none=False)
+    ingress_class_name = StringType(serialize_when_none=False)
     rules = ListType(ModelType(IngressRule), serialize_when_none=False)
     tls = ListType(ModelType(IngressTLS), serialize_when_none=False)
 
 
 class IngressStatus(Model):
-    loadBalancer = ModelType(LoadBalancerStatus, serialize_when_none=False)
+    load_balancer = ModelType(LoadBalancerStatus, serialize_when_none=False)
 
 
 class Ingress(Model):

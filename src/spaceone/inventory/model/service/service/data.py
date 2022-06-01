@@ -1,6 +1,6 @@
 from schematics import Model
 from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, Labels, LoadBalancerStatus
+from spaceone.inventory.libs.schema.base import ObjectMeta, Labels, LoadBalancerStatus, Condition
 
 
 class ClientIPConfig(Model):
@@ -41,14 +41,6 @@ class ServiceSpec(Model):
     session_affinity_config = ModelType(SessionAffinityConfig, serialize_when_none=False)
     type = StringType(choices=('ExternalName', 'ClusterIP', 'NodePort', 'LoadBalancer'), serialize_when_none=False)
 
-
-class Condition(Model):
-    last_transition_time = DateTimeType(serialize_when_none=False)
-    message = StringType(serialize_when_none=False)
-    observed_generation = IntType(serialize_when_none=False)
-    reason = StringType(serialize_when_none=False)
-    status = StringType(serialize_when_none=False)
-    type = StringType(serialize_when_none=False)
 
 
 class ServiceStatus(Model):

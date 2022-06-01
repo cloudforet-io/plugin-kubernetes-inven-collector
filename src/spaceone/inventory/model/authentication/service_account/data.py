@@ -1,0 +1,19 @@
+from schematics import Model
+from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
+from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, LocalObjectReference, ObjectReference
+
+
+class ServiceAccount(Model):
+    api_version = StringType(serialize_when_none=False)
+    kind = StringType(serialize_when_none=False)
+    uid = StringType(serialize_when_none=False)
+    automount_service_account_token = BooleanType(serialize_when_none=False)
+    image_pull_secrets = ListType(ModelType(LocalObjectReference), serialize_when_none=False)
+    metadata = ModelType(ObjectMeta, serialize_when_none=False)
+    secrets = ListType(ModelType(ObjectReference), serialize_when_none=False)
+
+    def reference(self):
+        return {
+            "resource_id": self.uid,
+            "external_link": f""
+        }

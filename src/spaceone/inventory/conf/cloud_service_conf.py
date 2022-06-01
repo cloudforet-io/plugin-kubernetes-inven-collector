@@ -4,9 +4,13 @@ SUPPORTED_FEATURES = ['garbage_collection']
 SUPPORTED_SCHEDULES = ['hours']
 FILTER_FORMAT = []
 CLOUD_SERVICE_GROUP_MAP = {
-    'WorkLoad': ['PodManager', 'DeploymentManager', 'DaemonSetManager'],
+    'WorkLoad': ['PodManager', 'DeploymentManager', 'DaemonSetManager', 'StatefulSetManager'],
     'Cluster': ['NodeManager', 'NamespaceManager'],
-    'Service': ['ServiceManager', 'IngressManager']
+    'Service': ['ServiceManager', 'IngressManager', 'NetworkPolicyManager'],
+    'Storage': ['StorageClassManager', 'PersistentVolumeClaimManager', 'PersistentVolumeManager'],
+    'Authentication': ['ServiceAccountManager'],
+    'Authorization': ['RoleManager', 'ClusterRoleManager'],
+    'Config': ['ConfigMapManager', 'SecretManager']
 }
 
 REGION_INFO = {

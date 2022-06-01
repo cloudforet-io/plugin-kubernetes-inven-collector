@@ -50,7 +50,7 @@ class DaemonSetManager(KubernetesManager):
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                _LOGGER.debug(f'daemon_set => {daemon_set}')
+                #_LOGGER.debug(f'daemon_set => {daemon_set}')
                 ##################################
                 # 2. Make Base Data
                 ##################################

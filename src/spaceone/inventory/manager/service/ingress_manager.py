@@ -30,7 +30,7 @@ class IngressManager(KubernetesManager):
         error_responses = []
 
         secret_data = params['secret_data']
-        pod_name = ''
+        ingress_name = ''
 
         ##################################
         # 0. Gather All Related Resources
@@ -42,7 +42,7 @@ class IngressManager(KubernetesManager):
 
         for ingress in list_all_ingress:
             try:
-                #_LOGGER.debug(f'deployment => {deployment.to_dict()}')
+                #_LOGGER.debug(f'ingress => {ingress.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
@@ -50,7 +50,7 @@ class IngressManager(KubernetesManager):
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                _LOGGER.debug(f'ingress => {ingress}')
+                #_LOGGER.debug(f'ingress => {ingress}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
@@ -94,7 +94,7 @@ class IngressManager(KubernetesManager):
             except Exception as e:
                 _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'Service', 'Ingress', pod_name)
+                error_response = self.generate_resource_error_response(e, 'Service', 'Ingress', ingress_name)
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses

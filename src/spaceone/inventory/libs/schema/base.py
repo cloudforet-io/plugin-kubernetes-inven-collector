@@ -79,7 +79,7 @@ class ObjectMeta(Model):
     creation_timestamp = DateTimeType(serialize_when_none=False)
     deletion_grace_period_seconds = StringType(serialize_when_none=False)
     deletion_timestamp = DateTimeType(serialize_when_none=False)
-    finalizers = StringType(serialize_when_none=False)
+    finalizers = ListType(StringType(), serialize_when_none=False)
     generate_name = StringType(serialize_when_none=False)
     generation = StringType(serialize_when_none=False)
     labels = ListType(ModelType(Labels), serialize_when_none=False)
@@ -389,6 +389,11 @@ class Toleration(Model):
     value = StringType(serialize_when_none=False)
 
 
+class SecretReference(Model):
+    name = StringType(serialize_when_none=False)
+    namespace = StringType(serialize_when_none=False)
+
+
 class AWSElasticBlockStoreVolumeSource(Model):
     fs_type = StringType(serialize_when_none=False)
     partition = IntType(serialize_when_none=False)
@@ -425,6 +430,45 @@ class CinderVolumeSource(Model):
     read_only = BooleanType(serialize_when_none=False)
     secret_ref = ModelType(LocalObjectReference, serialize_when_none=False)
     volume_id = StringType(serialize_when_none=False)
+
+
+class FCVolumeSource(Model):
+    fs_type = StringType(serialize_when_none=False)
+    lun = IntType(serialize_when_none=False)
+    read_only = BooleanType(serialize_when_none=False)
+    target_wwns = ListType(StringType(), serialize_when_none=False)
+    wwids = ListType(StringType(), serialize_when_none=False)
+
+
+class PhotonPersistentDiskVolumeSource(Model):
+    fs_type = StringType(serialize_when_none=False)
+    pd_id = StringType(serialize_when_none=False)
+
+
+class PortworxVolumeSource(Model):
+    fs_type = StringType(serialize_when_none=False)
+    read_only = BooleanType(serialize_when_none=False)
+    volume_id = StringType(serialize_when_none=False)
+
+
+class QuobyteVolumeSource(Model):
+    group = StringType(serialize_when_none=False)
+    read_only = BooleanType(serialize_when_none=False)
+    registry = StringType(serialize_when_none=False)
+    tenant = StringType(serialize_when_none=False)
+    user = StringType(serialize_when_none=False)
+    volume = StringType(serialize_when_none=False)
+
+
+class RBDPersistentVolumeSource(Model):
+    fs_type = StringType(serialize_when_none=False)
+    image = StringType(serialize_when_none=False)
+    keyring = StringType(serialize_when_none=False)
+    monitors = ListType(StringType(), serialize_when_none=False)
+    pool = StringType(serialize_when_none=False)
+    read_only = BooleanType(serialize_when_none=False)
+    secret_ref = ModelType(SecretReference, serialize_when_none=False)
+    user = StringType(serialize_when_none=False)
 
 
 class KeyToPath(Model):
@@ -628,3 +672,30 @@ class LoadBalancerIngress(Model):
 
 class LoadBalancerStatus(Model):
     ingress = ListType(ModelType(LoadBalancerIngress), serialize_when_none=False)
+
+
+class Condition(Model):
+    last_transition_time = DateTimeType(serialize_when_none=False)
+    message = StringType(serialize_when_none=False)
+    observed_generation = IntType(serialize_when_none=False)
+    reason = StringType(serialize_when_none=False)
+    status = StringType(serialize_when_none=False)
+    type = StringType(serialize_when_none=False)
+
+
+class ObjectReference(Model):
+    api_version = StringType(serialize_when_none=False)
+    field_path = StringType(serialize_when_none=False)
+    kind = StringType(serialize_when_none=False)
+    name = StringType(serialize_when_none=False)
+    namespace = StringType(serialize_when_none=False)
+    resource_version = StringType(serialize_when_none=False)
+    uid = StringType(serialize_when_none=False)
+
+
+class PolicyRule(Model):
+    api_groups = ListType(StringType(), serialize_when_none=False)
+    non_resource_urls = ListType(StringType(), serialize_when_none=False)
+    resource_names = ListType(StringType(), serialize_when_none=False)
+    resources = ListType(StringType(), serialize_when_none=False)
+    verbs = ListType(StringType(), serialize_when_none=False)

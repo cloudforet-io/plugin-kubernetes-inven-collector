@@ -24,13 +24,11 @@ class KubernetesConnector(BaseConnector):
             - token_uri: ...
             - ...
         """
-        #_LOGGER.debug(f'start k8s connector')
         super().__init__(transaction=None, config=None)
         secret_data = kwargs.get('secret_data')
 
         # Configure API Client
         kube_config = self._get_kube_config(secret_data)
-        #_LOGGER.debug(f'kube_config => {kube_config}')
         loader = KubeConfigLoader(
             config_dict=kube_config
         )
@@ -41,6 +39,8 @@ class KubernetesConnector(BaseConnector):
         self.core_v1_client = client.CoreV1Api(self.config)
         self.apps_v1_client = client.AppsV1Api(self.config)
         self.networking_v1_client = client.NetworkingV1Api(self.config)
+        self.storage_v1_client = client.StorageV1Api(self.config)
+        self.rbac_authorization_v1_client = client.RbacAuthorizationV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:

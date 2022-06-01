@@ -13,19 +13,19 @@ total_count_conf = os.path.join(current_dir, 'widget/total_count.yml')
 count_by_region_conf = os.path.join(current_dir, 'widget/count_by_region.yml')
 count_by_cluster_conf = os.path.join(current_dir, 'widget/count_by_cluster.yml')
 
-cst_service = CloudServiceTypeResource()
-cst_service.name = 'Ingress'
-cst_service.provider = 'kubernetes'
-cst_service.group = 'Service'
-cst_service.service_code = 'Ingress'
-cst_service.is_primary = True
-cst_service.is_major = True
-cst_service.labels = ['Networking', 'Container']
-cst_service.tags = {
+cst_ingress = CloudServiceTypeResource()
+cst_ingress.name = 'Ingress'
+cst_ingress.provider = 'kubernetes'
+cst_ingress.group = 'Service'
+cst_ingress.service_code = 'Ingress'
+cst_ingress.is_primary = True
+cst_ingress.is_major = True
+cst_ingress.labels = ['Networking', 'Container']
+cst_ingress.tags = {
     'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/ingress.svg',
 }
 
-cst_service._metadata = CloudServiceTypeMeta.set_meta(
+cst_ingress._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Name', 'name'),
         TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
@@ -53,5 +53,5 @@ cst_service._metadata = CloudServiceTypeMeta.set_meta(
 )
 
 CLOUD_SERVICE_TYPES = [
-    CloudServiceTypeResponse({'resource': cst_service}),
+    CloudServiceTypeResponse({'resource': cst_ingress}),
 ]

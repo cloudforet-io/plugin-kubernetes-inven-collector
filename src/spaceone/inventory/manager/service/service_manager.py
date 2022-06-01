@@ -30,7 +30,7 @@ class ServiceManager(KubernetesManager):
         error_responses = []
 
         secret_data = params['secret_data']
-        pod_name = ''
+        service_name = ''
 
         ##################################
         # 0. Gather All Related Resources
@@ -50,7 +50,7 @@ class ServiceManager(KubernetesManager):
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                _LOGGER.debug(f'service => {service}')
+                #_LOGGER.debug(f'service => {service}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
@@ -67,7 +67,7 @@ class ServiceManager(KubernetesManager):
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 service_data = Service(raw_data, strict=False)
-                _LOGGER.debug(f'service_data => {service_data.to_primitive()}')
+                #_LOGGER.debug(f'service_data => {service_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
@@ -94,7 +94,7 @@ class ServiceManager(KubernetesManager):
             except Exception as e:
                 _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'Service', 'Service', pod_name)
+                error_response = self.generate_resource_error_response(e, 'Service', 'Service', service_name)
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
