@@ -10,7 +10,8 @@ CLOUD_SERVICE_GROUP_MAP = {
     'Storage': ['StorageClassManager', 'PersistentVolumeClaimManager', 'PersistentVolumeManager'],
     'Authentication': ['ServiceAccountManager'],
     'Authorization': ['RoleManager', 'ClusterRoleManager'],
-    'Config': ['ConfigMapManager', 'SecretManager']
+    'Config': ['ConfigMapManager', 'SecretManager', 'CertificateSigningRequestManager'],
+    'Application': ['CustomResourceDefinitionManager']
 }
 
 REGION_INFO = {

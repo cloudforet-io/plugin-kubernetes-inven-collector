@@ -41,6 +41,8 @@ class KubernetesConnector(BaseConnector):
         self.networking_v1_client = client.NetworkingV1Api(self.config)
         self.storage_v1_client = client.StorageV1Api(self.config)
         self.rbac_authorization_v1_client = client.RbacAuthorizationV1Api(self.config)
+        self.certificate_v1_client = client.CertificatesV1Api(self.config)
+        self.api_extensions_v1_client = client.ApiextensionsV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:

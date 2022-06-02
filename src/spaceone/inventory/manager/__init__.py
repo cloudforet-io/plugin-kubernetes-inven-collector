@@ -15,6 +15,11 @@ from spaceone.inventory.manager.authorization.role_manager import RoleManager
 from spaceone.inventory.manager.authorization.cluster_role_manager import ClusterRoleManager
 from spaceone.inventory.manager.config.config_map_manager import ConfigMapManager
 from spaceone.inventory.manager.config.secret_manager import SecretManager
+from spaceone.inventory.manager.config.certificate_signinig_request import CertificateSigningRequestManager
+from spaceone.inventory.manager.application.custom_resource_definition_manager import CustomResourceDefinitionManager
+
+
+
 
 
 

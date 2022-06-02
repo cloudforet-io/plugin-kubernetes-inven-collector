@@ -15,5 +15,10 @@ from spaceone.inventory.connector.authorization.role import RoleConnector
 from spaceone.inventory.connector.authorization.cluster_role import ClusterRoleConnector
 from spaceone.inventory.connector.config.config_map import ConfigMapConnector
 from spaceone.inventory.connector.config.secret import SecretConnector
+from spaceone.inventory.connector.config.certificate_signing_request import CertificateSigningRequestConnector
+from spaceone.inventory.connector.application.custom_resource_definition import CustomResourceDefinitionConnector
+
+
+
 
 

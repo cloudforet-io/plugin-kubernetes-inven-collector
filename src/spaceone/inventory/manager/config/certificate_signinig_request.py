@@ -1,20 +1,21 @@
 import logging
 
 from spaceone.inventory.libs.manager import KubernetesManager
-from spaceone.inventory.connector.config.secret import SecretConnector
-from spaceone.inventory.model.config.secret.cloud_service import SecretResource, SecretResponse
-from spaceone.inventory.model.config.secret.cloud_service_type import CLOUD_SERVICE_TYPES
-from spaceone.inventory.model.config.secret.data import Secret
+from spaceone.inventory.connector.config.certificate_signing_request import CertificateSigningRequestConnector
+from spaceone.inventory.model.config.certificate_signing_request.cloud_service import CertificateSigningRequestResource,\
+    CertificateSigningRequestResponse
+from spaceone.inventory.model.config.certificate_signing_request.cloud_service_type import CLOUD_SERVICE_TYPES
+from spaceone.inventory.model.config.certificate_signing_request.data import CertificateSigningRequest
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class SecretManager(KubernetesManager):
-    connector_name = 'SecretConnector'
+class CertificateSigningRequestManager(KubernetesManager):
+    connector_name = 'CertificateSigningRequestConnector'
     cloud_service_types = CLOUD_SERVICE_TYPES
 
     def collect_cloud_service(self, params):
-        _LOGGER.debug(f'** Secret Start **')
+        _LOGGER.debug(f'** Certificate Signing Request Start **')
         """
         Args:
             params:
@@ -36,46 +37,46 @@ class SecretManager(KubernetesManager):
         # 0. Gather All Related Resources
         # List all information through connector
         ##################################
-        secret_conn: SecretConnector = self.locator.get_connector(self.connector_name, **params)
-        list_all_secret = secret_conn.list_secret()
-        #_LOGGER.debug(f'list_all_secret => {list_all_secret}')
+        csr_conn: CertificateSigningRequestConnector = self.locator.get_connector(self.connector_name, **params)
+        list_all_csr = csr_conn.list_csr()
+        #_LOGGER.debug(f'list_all_csr => {list_all_csr}')
 
-        for secret in list_all_secret:
+        for csr in list_all_csr:
             try:
-                #_LOGGER.debug(f'secret => {secret.to_dict()}')
+                #_LOGGER.debug(f'csr => {csr.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
-                secret_name = secret.metadata.name
+                csr_name = csr.metadata.name
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                #_LOGGER.debug(f'secret => {secret}')
+                _LOGGER.debug(f'csr => {csr}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
                 # key:value type data need to be processed separately
                 # Convert object to dict
-                raw_data = secret.to_dict()
-                raw_readonly = secret.to_dict()
+                raw_data = csr.to_dict()
+                raw_readonly = csr.to_dict()
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('annotations', {}))
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
-                raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data['uid'] = raw_readonly['spec']['uid']
 
-                secret_data = Secret(raw_data, strict=False)
-                #_LOGGER.debug(f'secret => {secret_data.to_primitive()}')
+                csr_data = CertificateSigningRequest(raw_data, strict=False)
+                _LOGGER.debug(f'csr_data => {csr_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
                 ##################################
-                secret_resource = SecretResource({
-                    'name': secret_name,
+                csr_resource = CertificateSigningRequestResource({
+                    'name': csr_name,
                     'account': cluster_name,
                     'region_code': region,
-                    'data': secret_data,
-                    'reference': secret_data.reference()
+                    'data': csr_data,
+                    'reference': csr_data.reference()
                 })
 
                 ##################################
@@ -87,12 +88,12 @@ class SecretManager(KubernetesManager):
                 # 5. Make Resource Response Object
                 # List of InstanceResponse Object
                 ##################################
-                collected_cloud_services.append(SecretResponse({'resource': secret_resource}))
+                collected_cloud_services.append(CertificateSigningRequestResponse({'resource': csr_resource}))
 
             except Exception as e:
                 _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'Config', 'Secret', secret_name)
+                error_response = self.generate_resource_error_response(e, 'Config', 'CertificateSigningRequest', csr_name)
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
