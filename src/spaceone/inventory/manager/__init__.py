@@ -17,6 +17,7 @@ from spaceone.inventory.manager.config.config_map_manager import ConfigMapManage
 from spaceone.inventory.manager.config.secret_manager import SecretManager
 from spaceone.inventory.manager.config.certificate_signinig_request import CertificateSigningRequestManager
 from spaceone.inventory.manager.application.custom_resource_definition_manager import CustomResourceDefinitionManager
+from spaceone.inventory.manager.application.application import ApplicationManager
 
 
 

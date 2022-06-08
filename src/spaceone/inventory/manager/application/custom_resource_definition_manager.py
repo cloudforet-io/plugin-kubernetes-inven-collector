@@ -66,7 +66,7 @@ class CustomResourceDefinitionManager(KubernetesManager):
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 crd_data = CustomResourceDefinition(raw_data, strict=False)
-                _LOGGER.debug(f'crd_data => {crd_data.to_primitive()}')
+                #_LOGGER.debug(f'crd_data => {crd_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

@@ -15,6 +15,7 @@ from spaceone.inventory.model.config.config_map import *
 from spaceone.inventory.model.config.secret import *
 from spaceone.inventory.model.config.certificate_signing_request import *
 from spaceone.inventory.model.application.custom_resource_definition import *
+from spaceone.inventory.model.application.application import *
 
 
 

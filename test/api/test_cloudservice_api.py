@@ -55,8 +55,8 @@ class TestCollector(TestCase):
             }
         '''
         print(f'======================= start test collect! ===========================')
-        options = {
-        }
+        options = {'cloud_service_types': ['Application']}
+        #options = {}
         filter = {}
         secret_data = {
             "cluster_name": CLUSTER_NAME,

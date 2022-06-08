@@ -11,7 +11,7 @@ CLOUD_SERVICE_GROUP_MAP = {
     'Authentication': ['ServiceAccountManager'],
     'Authorization': ['RoleManager', 'ClusterRoleManager'],
     'Config': ['ConfigMapManager', 'SecretManager', 'CertificateSigningRequestManager'],
-    'Application': ['CustomResourceDefinitionManager']
+    'Application': ['CustomResourceDefinitionManager', 'ApplicationManager']
 }
 
 REGION_INFO = {
