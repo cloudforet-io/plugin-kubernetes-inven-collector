@@ -6,7 +6,7 @@ __all_ = ['ApplicationConnector']
 _LOGGER = logging.getLogger(__name__)
 
 
-class ApplicationConnector(KubernetesConnector):
+class ReleaseConnector(KubernetesConnector):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

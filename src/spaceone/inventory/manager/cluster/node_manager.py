@@ -65,7 +65,7 @@ class NodeManager(KubernetesManager):
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 node_data = Node(raw_data, strict=False)
-                _LOGGER.debug(f'node_data => {node_data.to_primitive()}')
+                #_LOGGER.debug(f'node_data => {node_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

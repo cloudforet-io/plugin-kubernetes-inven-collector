@@ -4,6 +4,8 @@ from spaceone.inventory.manager.workload.daemon_set_manager import DaemonSetMana
 from spaceone.inventory.manager.workload.stateful_set_manager import StatefulSetManager
 from spaceone.inventory.manager.cluster.node_manager import NodeManager
 from spaceone.inventory.manager.cluster.namespace_manager import NamespaceManager
+from spaceone.inventory.manager.cluster.event_manager import EventManager
+from spaceone.inventory.manager.cluster.cluster_manager import ClusterManager
 from spaceone.inventory.manager.service.service_manager import ServiceManager
 from spaceone.inventory.manager.service.ingress_manager import IngressManager
 from spaceone.inventory.manager.service.network_policy_manager import NetworkPolicyManager
@@ -16,8 +18,9 @@ from spaceone.inventory.manager.authorization.cluster_role_manager import Cluste
 from spaceone.inventory.manager.config.config_map_manager import ConfigMapManager
 from spaceone.inventory.manager.config.secret_manager import SecretManager
 from spaceone.inventory.manager.config.certificate_signinig_request import CertificateSigningRequestManager
-from spaceone.inventory.manager.application.custom_resource_definition_manager import CustomResourceDefinitionManager
-from spaceone.inventory.manager.application.application import ApplicationManager
+from spaceone.inventory.manager.config.custom_resource_definition_manager import CustomResourceDefinitionManager
+from spaceone.inventory.manager.helm.release import ReleaseManager
+
 
 
 

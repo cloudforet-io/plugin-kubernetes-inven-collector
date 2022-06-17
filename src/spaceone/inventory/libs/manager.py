@@ -77,6 +77,75 @@ class KubernetesManager(BaseManager):
         if region not in self.collected_region_codes:
             self.collected_region_codes.append(region)
 
+    def get_kubernetes_provider(self, list_node):
+        kubernetes_provider = "unknown"
+        if len(list_node) > 0:
+            node = list_node[0]
+            raw_node = node.to_dict()
+            provider_id = raw_node.get('spec', {}).get('provider_id', '')
+            if provider_id is None or provider_id == '':
+                kubernetes_provider = self.get_provider_from_node(raw_node)
+            else:
+                kubernetes_provider = self.get_provider_from_provider_id(provider_id)
+        else:
+            kubernetes_provider = "unknown"
+
+        return kubernetes_provider
+
+    def get_kubernetes_version(self, list_node):
+        kubernetes_version = "unknown"
+        if len(list_node) > 0:
+            node = list_node[0]
+            raw_node = node.to_dict()
+            kubernetes_version = self.get_version_from_node(raw_node)
+        else:
+            kubernetes_version = "unknown"
+
+        return kubernetes_version
+
+    @staticmethod
+    def get_memory_total_per_node(node):
+        # "memory": "1003292Ki"
+        raw_node = node.to_dict()
+        memory = raw_node.get('status', {}).get('allocatable', {}).get('memory', '0Ki')
+
+        return memory
+
+    @staticmethod
+    def get_cpu_total_per_node(node):
+        # "cpu": "940m"
+        raw_node = node.to_dict()
+        cpu = raw_node.get('status', {}).get('allocatable', {}).get('cpu', '0m')
+
+        return cpu
+
+    @staticmethod
+    def get_pod_count_total_per_node(node):
+        # "pods": "110"
+        raw_node = node.to_dict()
+        pod_count = raw_node.get('status', {}).get('allocatable', {}).get('pod', 0)
+
+        return pod_count
+
+    @staticmethod
+    def get_cpu_current_per_node(node, list_pod):
+        '''
+        get cpu current usage from resources.requests.cpus in each containers
+        '''
+        cpu_current = ""
+        node_name = node.to_dict().get('metadata', {}).get('name', '')
+        for pod in list_pod:
+            pod_raw = pod.to_dict()
+            if node_name == pod_raw.get('spec', {}).get('node_name', ''):
+                list_container = pod_raw.get('spec', {}).get('containers', '')
+                for container in list_container:
+                    log = container.get('resources', {})
+                    _LOGGER.debug(f'requests => {log}')
+                    cpu = container.get('resources', {}).get('requests', {}).get('cpu', '0m')
+                    cpu_current = cpu_current + int(cpu.replace('m', ''))
+
+        return cpu_current
+
     @staticmethod
     def convert_labels_format(labels):
         convert_labels = []
@@ -147,7 +216,7 @@ class KubernetesManager(BaseManager):
         :param secret_data:
         :return:
         """
-        cluster_name = ''
+        cluster_name = secret_data.get('cluster_name', '')
         current_context = secret_data.get('current-context', '')
         list_contexts = secret_data.get('contexts', [])
 
@@ -156,3 +225,42 @@ class KubernetesManager(BaseManager):
                 cluster_name = context.get('context', {}).get('cluster', '')
 
         return cluster_name
+
+    @staticmethod
+    def get_provider_from_node(raw_node):
+        kubelet_version = raw_node.get('status', {}).get('node_info', {}).get('kubelet_version', '')
+        if len(kubelet_version.split('-')) >= 2:
+            if kubelet_version.split('-')[1].startswith('gke'):
+                return 'gke'
+            elif kubelet_version.split('-')[1].startswith('eks'):
+                return 'eks'
+            else:
+                return 'unknown'
+        else:
+            return 'unknown'
+
+    @staticmethod
+    def get_version_from_node(raw_node):
+        kubelet_version = raw_node.get('status', {}).get('node_info', {}).get('kubelet_version', '')
+        if len(kubelet_version.split('-')) >= 1:
+            return kubelet_version.split('-')[0]
+        else:
+            return 'unknown'
+
+    @staticmethod
+    def get_provider_from_provider_id(provider_id):
+        """
+        provider_id => aws:///ap-northeast-2c/i-xxxxxxxx
+        :param provider_id:
+        :return:
+        """
+        _LOGGER.debug(f'get_provider_from_provider_id => {provider_id}')
+        cloud_provider = provider_id.split(':')[0]
+        if cloud_provider == 'aws':
+            return 'eks'
+        elif cloud_provider == 'gce':
+            return 'gke'
+        else:
+            return 'unknown'
+
+

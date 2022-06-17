@@ -34,8 +34,11 @@ class KubernetesConnector(BaseConnector):
         )
 
         configuration = client.Configuration()
+        configuration.retries = 3
+        configuration.client_side_validation = False
         loader.load_and_set(configuration)
         self.config = client.ApiClient(configuration)
+
         self.core_v1_client = client.CoreV1Api(self.config)
         self.apps_v1_client = client.AppsV1Api(self.config)
         self.networking_v1_client = client.NetworkingV1Api(self.config)
@@ -43,6 +46,8 @@ class KubernetesConnector(BaseConnector):
         self.rbac_authorization_v1_client = client.RbacAuthorizationV1Api(self.config)
         self.certificate_v1_client = client.CertificatesV1Api(self.config)
         self.api_extensions_v1_client = client.ApiextensionsV1Api(self.config)
+        # Disable api model verification for event api
+        self.event_v1_client = client.EventsV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:

@@ -67,7 +67,7 @@ class HelmData(Model):
     release = ModelType(HelmRelease, deserialize_from="release", serialize_when_none=False)
 
 
-class Application(Model):
+class Release(Model):
     api_version = StringType(serialize_when_none=False)
     type = StringType(serialize_when_none=False)
     kind = StringType(serialize_when_none=False)

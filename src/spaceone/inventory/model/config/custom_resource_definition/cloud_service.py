@@ -1,10 +1,6 @@
 from schematics.types import ModelType, StringType, PolyModelType
 
-from spaceone.inventory.model.application.custom_resource_definition.data import CustomResourceDefinition
-from spaceone.inventory.libs.schema.metadata.dynamic_field import TextDyField, DateTimeDyField, \
-    EnumDyField, ListDyField, DictDyField
-from spaceone.inventory.libs.schema.metadata.dynamic_layout import ItemDynamicLayout, TableDynamicLayout, \
-    ListDynamicLayout, SimpleTableDynamicLayout
+from spaceone.inventory.model.config.custom_resource_definition.data import CustomResourceDefinition
 from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, CloudServiceResponse, CloudServiceMeta
 
 '''
@@ -15,7 +11,7 @@ crd_meta = CloudServiceMeta.set_layouts([])
 
 
 class ServiceResource(CloudServiceResource):
-    cloud_service_group = StringType(default='Application')
+    cloud_service_group = StringType(default='Config')
 
 
 class CustomResourceDefinitionResource(ServiceResource):

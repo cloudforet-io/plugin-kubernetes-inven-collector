@@ -5,13 +5,13 @@ SUPPORTED_SCHEDULES = ['hours']
 FILTER_FORMAT = []
 CLOUD_SERVICE_GROUP_MAP = {
     'WorkLoad': ['PodManager', 'DeploymentManager', 'DaemonSetManager', 'StatefulSetManager'],
-    'Cluster': ['NodeManager', 'NamespaceManager'],
+    'Cluster': ['ClusterManager', 'NodeManager', 'NamespaceManager'],
     'Service': ['ServiceManager', 'IngressManager', 'NetworkPolicyManager'],
     'Storage': ['StorageClassManager', 'PersistentVolumeClaimManager', 'PersistentVolumeManager'],
     'Authentication': ['ServiceAccountManager'],
     'Authorization': ['RoleManager', 'ClusterRoleManager'],
-    'Config': ['ConfigMapManager', 'SecretManager', 'CertificateSigningRequestManager'],
-    'Application': ['CustomResourceDefinitionManager', 'ApplicationManager']
+    'Config': ['ConfigMapManager', 'SecretManager', 'CertificateSigningRequestManager', 'CustomResourceDefinitionManager'],
+    'Helm': ['ReleaseManager']
 }
 
 REGION_INFO = {

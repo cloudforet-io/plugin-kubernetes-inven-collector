@@ -13,19 +13,19 @@ total_count_conf = os.path.join(current_dir, 'widget/total_count.yml')
 count_by_region_conf = os.path.join(current_dir, 'widget/count_by_region.yml')
 count_by_cluster_conf = os.path.join(current_dir, 'widget/count_by_cluster.yml')
 
-cst_application = CloudServiceTypeResource()
-cst_application.name = 'Application'
-cst_application.provider = 'kubernetes'
-cst_application.group = 'Application'
-cst_application.service_code = 'Application'
-cst_application.is_primary = True
-cst_application.is_major = True
-cst_application.labels = ['Application Integration']
-cst_application.tags = {
-    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/application.svg',
+cst_release = CloudServiceTypeResource()
+cst_release.name = 'Release'
+cst_release.provider = 'kubernetes'
+cst_release.group = 'Helm'
+cst_release.service_code = 'Release'
+cst_release.is_primary = True
+cst_release.is_major = True
+cst_release.labels = ['Application Integration']
+cst_release.tags = {
+    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/release.svg',
 }
 
-cst_application._metadata = CloudServiceTypeMeta.set_meta(
+cst_release._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Name', 'name'),
         TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
@@ -53,5 +53,5 @@ cst_application._metadata = CloudServiceTypeMeta.set_meta(
 )
 
 CLOUD_SERVICE_TYPES = [
-    CloudServiceTypeResponse({'resource': cst_application}),
+    CloudServiceTypeResponse({'resource': cst_release}),
 ]

@@ -1,21 +1,20 @@
 import logging
 
 from spaceone.inventory.libs.manager import KubernetesManager
-from spaceone.inventory.connector.application.custom_resource_definition import CustomResourceDefinitionConnector
-from spaceone.inventory.model.application.custom_resource_definition.cloud_service import CustomResourceDefinitionResource, \
-    CustomResourceDefinitionResourceResponse
-from spaceone.inventory.model.application.custom_resource_definition.cloud_service_type import CLOUD_SERVICE_TYPES
-from spaceone.inventory.model.application.custom_resource_definition.data import CustomResourceDefinition
+from spaceone.inventory.connector.cluster.event import EventConnector
+from spaceone.inventory.model.cluster.event.cloud_service import EventResource, EventResponse
+from spaceone.inventory.model.cluster.event.cloud_service_type import CLOUD_SERVICE_TYPES
+from spaceone.inventory.model.cluster.event.data import Event
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class CustomResourceDefinitionManager(KubernetesManager):
-    connector_name = 'CustomResourceDefinitionConnector'
+class EventManager(KubernetesManager):
+    connector_name = 'EventConnector'
     cloud_service_types = CLOUD_SERVICE_TYPES
 
     def collect_cloud_service(self, params):
-        _LOGGER.debug(f'** Custom Resource Definition Start **')
+        _LOGGER.debug(f'** Event Start **')
         """
         Args:
             params:
@@ -31,52 +30,51 @@ class CustomResourceDefinitionManager(KubernetesManager):
         error_responses = []
 
         secret_data = params['secret_data']
-        crd_name = ''
+        event_name = ''
 
         ##################################
         # 0. Gather All Related Resources
         # List all information through connector
         ##################################
-        crd_conn: CustomResourceDefinitionConnector = self.locator.get_connector(self.connector_name, **params)
-        list_all_crd = crd_conn.list_custom_resource_definition()
-        #_LOGGER.debug(f'list_all_crd => {list_all_crd}')
+        event_conn: EventConnector = self.locator.get_connector(self.connector_name, **params)
+        list_all_event = event_conn.list_event()
+        #_LOGGER.debug(f'list_all_event => {list_all_event}')
 
-        for crd in list_all_crd:
+        for event in list_all_event:
             try:
-                #_LOGGER.debug(f'crd => {crd.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
-                crd_name = crd.metadata.name
+                event_name = event.metadata.name
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                #_LOGGER.debug(f'crd => {crd}')
+                _LOGGER.debug(f'event => {event.to_dict()}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
                 # key:value type data need to be processed separately
                 # Convert object to dict
-                raw_data = crd.to_dict()
-                raw_readonly = crd.to_dict()
+                raw_data = event.to_dict()
+                raw_readonly = event.to_dict()
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('annotations', {}))
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
-                crd_data = CustomResourceDefinition(raw_data, strict=False)
-                #_LOGGER.debug(f'crd_data => {crd_data.to_primitive()}')
+                event_data = Event(raw_data, strict=False)
+                _LOGGER.debug(f'event_data => {event_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
                 ##################################
-                crd_resource = CustomResourceDefinitionResource({
-                    'name': crd_name,
+                event_resource = EventResource({
+                    'name': event_name,
                     'account': cluster_name,
                     'region_code': region,
-                    'data': crd_data,
-                    'reference': crd_data.reference()
+                    'data': event_data,
+                    'reference': event_data.reference()
                 })
 
                 ##################################
@@ -88,12 +86,12 @@ class CustomResourceDefinitionManager(KubernetesManager):
                 # 5. Make Resource Response Object
                 # List of InstanceResponse Object
                 ##################################
-                collected_cloud_services.append(CustomResourceDefinitionResourceResponse({'resource': crd_resource}))
+                collected_cloud_services.append(EventResponse({'resource': event_resource}))
 
             except Exception as e:
                 _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'Application', 'CustomResourceResponse', crd_name)
+                error_response = self.generate_resource_error_response(e, 'Cluster', 'Event', event_name)
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses

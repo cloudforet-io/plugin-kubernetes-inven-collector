@@ -13,19 +13,19 @@ total_count_conf = os.path.join(current_dir, 'widget/total_count.yml')
 count_by_region_conf = os.path.join(current_dir, 'widget/count_by_region.yml')
 count_by_cluster_conf = os.path.join(current_dir, 'widget/count_by_cluster.yml')
 
-cst_namespace = CloudServiceTypeResource()
-cst_namespace.name = 'Namespace'
-cst_namespace.provider = 'kubernetes'
-cst_namespace.group = 'Cluster'
-cst_namespace.service_code = 'Namespace'
-cst_namespace.is_primary = True
-cst_namespace.is_major = False
-cst_namespace.labels = ['Container']
-cst_namespace.tags = {
-    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/namespace.svg',
+cst_event = CloudServiceTypeResource()
+cst_event.name = 'Event'
+cst_event.provider = 'kubernetes'
+cst_event.group = 'Cluster'
+cst_event.service_code = 'Event'
+cst_event.is_primary = True
+cst_event.is_major = True
+cst_event.labels = ['Container']
+cst_event.tags = {
+    'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/event.svg',
 }
 
-cst_namespace._metadata = CloudServiceTypeMeta.set_meta(
+cst_event._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Name', 'name'),
         TextDyField.data_source('Status', 'data.status.phase'),
@@ -50,5 +50,5 @@ cst_namespace._metadata = CloudServiceTypeMeta.set_meta(
 )
 
 CLOUD_SERVICE_TYPES = [
-    CloudServiceTypeResponse({'resource': cst_namespace}),
+    CloudServiceTypeResponse({'resource': cst_event}),
 ]
