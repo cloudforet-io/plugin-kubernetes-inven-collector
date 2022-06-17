@@ -36,7 +36,7 @@ cluster_condition = TableDynamicLayout.set_fields('Condition', root_path='data.n
     DateTimeDyField.data_source('Last Transition Time', 'last_transition_time')
 ])
 
-cluster_meta = CloudServiceMeta.set_layouts([cluster])
+cluster_meta = CloudServiceMeta.set_layouts([cluster, cluster_condition])
 
 
 class ClusterGroupResource(CloudServiceResource):
