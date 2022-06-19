@@ -11,7 +11,14 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Namespace
 '''
 
-namespace_meta = CloudServiceMeta.set_layouts([])
+namespace = ItemDynamicLayout.set_fields('Details', fields=[
+    TextDyField.data_source('Name', 'name'),
+    TextDyField.data_source('Status', 'data.status.phase'),
+    DateTimeDyField.data_source('Created', 'data.metadata.creation_timestamp'),
+    TextDyField.data_source('Uid', 'data.metadata.uid')
+])
+
+namespace_meta = CloudServiceMeta.set_layouts([namespace])
 
 
 class WorkLoadResource(CloudServiceResource):

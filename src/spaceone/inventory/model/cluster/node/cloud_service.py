@@ -11,7 +11,59 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Node
 '''
 
-node_meta = CloudServiceMeta.set_layouts([])
+node_base = ItemDynamicLayout.set_fields('Base', fields=[
+    TextDyField.data_source('Name', 'name'),
+    TextDyField.data_source('Uid', 'data.metadata.uid'),
+    DateTimeDyField.data_source('Created', 'data.metadata.creation_timestamp')
+])
+
+node_allocatable = ItemDynamicLayout.set_fields('Allocatable', root_path='data.status.allocatable', fields=[
+    TextDyField.data_source('CPU', 'cpu'),
+    TextDyField.data_source('Ephemeral-Storage', 'ephemeral-storage'),
+    TextDyField.data_source('Hugepages-1Gi', 'hugepages-1Gi'),
+    TextDyField.data_source('Hugepages-2Mi', 'hugepages-2Mi'),
+    TextDyField.data_source('Memory', 'memory'),
+    TextDyField.data_source('Pods', 'pods'),
+])
+
+node_capacity = ItemDynamicLayout.set_fields('Capacity', fields=[
+    TextDyField.data_source('CPU', 'cpu'),
+    TextDyField.data_source('Ephemeral-storage', 'ephemeral-storage'),
+    TextDyField.data_source('Hugepages-1Gi', 'hugepages-1Gi'),
+    TextDyField.data_source('Hugepages-2Mi', 'hugepages-2Mi'),
+    TextDyField.data_source('Memory', 'memory'),
+    TextDyField.data_source('Pods', 'pods')
+])
+
+node_layout = ListDynamicLayout.set_layouts('Node', layouts=[node_base, node_allocatable, node_capacity])
+
+annotations = TableDynamicLayout.set_fields('Annotation', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value'),
+])
+
+label = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+address = TableDynamicLayout.set_fields('Address', root_path='data.status.addresses', fields=[
+    TextDyField.data_source('Type', 'type'),
+    TextDyField.data_source('Address', 'address')
+])
+
+condition = TableDynamicLayout.set_fields('Condition', root_path='data.status.conditions', fields=[
+    TextDyField.data_source('Type', 'type'),
+    TextDyField.data_source('Status', 'status'),
+    TextDyField.data_source('Message', 'message'),
+    TextDyField.data_source('Reason', 'reason')
+])
+
+images = TableDynamicLayout.set_fields('Images', root_path='data.status.images', fields=[
+    ListDyField.data_source('Names', 'names')
+])
+
+node_meta = CloudServiceMeta.set_layouts([node_layout, annotations, label, address, condition, images])
 
 
 class WorkLoadResource(CloudServiceResource):

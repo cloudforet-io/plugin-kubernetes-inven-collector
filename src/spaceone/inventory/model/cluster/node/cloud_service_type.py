@@ -28,10 +28,8 @@ cst_node.tags = {
 cst_node._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Name', 'name'),
-        TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
-        SizeField.data_source('Memory', 'data.status.capacity.memory'),
+        TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
-        TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })
