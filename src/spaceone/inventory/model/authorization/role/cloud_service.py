@@ -28,9 +28,9 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
 ])
 
 rules = TableDynamicLayout.set_fields('Rules', fields=[
-    TextDyField.data_source('API Groups', 'data.rules.api_groups'),
-    TextDyField.data_source('Resources', 'data.rules.resources'),
-    TextDyField.data_source('Verbs', 'data.rules.verbs')
+    ListDyField.data_source('API Groups', 'data.rules.api_groups'),
+    ListDyField.data_source('Resources', 'data.rules.resources'),
+    ListDyField.data_source('Verbs', 'data.rules.verbs')
 ])
 
 
