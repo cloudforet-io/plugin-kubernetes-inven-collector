@@ -99,7 +99,7 @@ pod_spec_meta = ListDynamicLayout.set_layouts('Spec', layouts=[pod_spec_base_met
 Containers
 '''
 
-pod_container_base_meta = SimpleTableDynamicLayout.set_fields('Containers', root_path='data.spec.containers', fields=[
+pod_container_meta = SimpleTableDynamicLayout.set_fields('Containers', root_path='data.spec.containers', fields=[
     TextDyField.data_source('Name', 'name'),
     TextDyField.data_source('Ports', 'ports'),
     TextDyField.data_source('Args', 'args'),
@@ -119,7 +119,7 @@ pod_container_base_meta = SimpleTableDynamicLayout.set_fields('Containers', root
     TextDyField.data_source('Working Dir', 'working_dir')
 ])
 
-pod_container_base_init_meta = SimpleTableDynamicLayout.set_fields('Init Containers', root_path='data.spec.init_containers', fields=[
+pod_container_init_meta = SimpleTableDynamicLayout.set_fields('Init Containers', root_path='data.spec.init_containers', fields=[
    TextDyField.data_source('Name', 'name'),
    TextDyField.data_source('Ports', 'ports'),
    TextDyField.data_source('Args', 'args'),
@@ -138,9 +138,6 @@ pod_container_base_init_meta = SimpleTableDynamicLayout.set_fields('Init Contain
    ListDyField.data_source('Volume Mounts', 'volume_mounts'),
    TextDyField.data_source('Working Dir', 'working_dir')
 ])
-
-pod_container_meta = ListDynamicLayout.set_layouts('Containers', layouts=[pod_container_base_meta,
-                                                                          pod_container_base_init_meta])
 
 '''
 Volumes
@@ -190,7 +187,7 @@ pod_status_container_status_meta = SimpleTableDynamicLayout.set_fields('Containe
    TextDyField.data_source('Last State', 'last_state')
 ])
 
-pod_status_meta = ListDynamicLayout.set_layouts('Status', layouts=[pod_status_container_status_meta,
+pod_status_meta = ListDynamicLayout.set_layouts('Status', layouts=[pod_status_base_meta,
                                                                    pod_status_conditions_meta,
                                                                    pod_status_container_status_meta])
 
@@ -205,7 +202,7 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
 ])
 
 pod_meta = CloudServiceMeta.set_layouts([pod_metadata_meta, annotations, labels, pod_spec_meta, pod_container_meta,
-                                         pod_volume_meta, pod_status_meta])
+                                         pod_container_init_meta, pod_volume_meta, pod_status_meta])
 
 
 class WorkLoadResource(CloudServiceResource):

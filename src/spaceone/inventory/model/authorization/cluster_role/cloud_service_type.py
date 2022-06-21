@@ -14,10 +14,10 @@ count_by_region_conf = os.path.join(current_dir, 'widget/count_by_region.yml')
 count_by_cluster_conf = os.path.join(current_dir, 'widget/count_by_cluster.yml')
 
 cst_cluster_role = CloudServiceTypeResource()
-cst_cluster_role.name = 'Role'
+cst_cluster_role.name = 'ClusterRole'
 cst_cluster_role.provider = 'kubernetes'
 cst_cluster_role.group = 'Authorization'
-cst_cluster_role.service_code = 'Role'
+cst_cluster_role.service_code = 'ClusterRole'
 cst_cluster_role.is_primary = True
 cst_cluster_role.is_major = True
 cst_cluster_role.labels = ['Security', 'Management']
