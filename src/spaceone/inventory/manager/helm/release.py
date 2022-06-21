@@ -61,9 +61,9 @@ class ReleaseManager(KubernetesManager):
                 # Convert object to dict
                 encoded_data = release.to_dict()
                 raw_data = self._base64_to_dict(encoded_data)
-                _LOGGER.debug(f'raw_data => {raw_data}')
+                #_LOGGER.debug(f'raw_data => {raw_data}')
                 release_data = Release(raw_data, strict=False)
-                _LOGGER.debug(f'release_data => {release_data.to_primitive()}')
+                #_LOGGER.debug(f'release_data => {release_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

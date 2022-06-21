@@ -1,13 +1,27 @@
 from schematics.types import ModelType, StringType, PolyModelType
 
 from spaceone.inventory.model.config.custom_resource_definition.data import CustomResourceDefinition
+from spaceone.inventory.libs.schema.metadata.dynamic_field import TextDyField, DateTimeDyField, \
+    EnumDyField, ListDyField, DictDyField
+from spaceone.inventory.libs.schema.metadata.dynamic_layout import ItemDynamicLayout, TableDynamicLayout, \
+    ListDynamicLayout, SimpleTableDynamicLayout
 from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, CloudServiceResponse, CloudServiceMeta
 
 '''
 CUSTOM RESOURCE DEFINITION
 '''
 
-crd_meta = CloudServiceMeta.set_layouts([])
+annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+crd_meta = CloudServiceMeta.set_layouts([annotations, labels])
 
 
 class ServiceResource(CloudServiceResource):

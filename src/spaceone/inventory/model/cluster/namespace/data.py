@@ -13,7 +13,7 @@ class NamespaceCondition(Model):
 
 class NamespaceStatus(Model):
     conditions = ListType(ModelType(NamespaceCondition), serialize_when_none=False)
-    phase = StringType(serialize_when_none=False)
+    phase = StringType(choices=('Active', 'Terminating'), serialize_when_none=False)
 
 
 class NamespaceSpec(Model):

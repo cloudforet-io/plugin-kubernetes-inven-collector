@@ -66,6 +66,8 @@ class IngressManager(KubernetesManager):
                     raw_readonly.get('spec', {}).get('selector', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 ingress_data = Ingress(raw_data, strict=False)
                 _LOGGER.debug(f'ingress_data => {ingress_data.to_primitive()}')
 
@@ -75,6 +77,7 @@ class IngressManager(KubernetesManager):
                 ingress_resource = IngressResource({
                     'name': ingress_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': ingress_data,
                     'reference': ingress_data.reference()

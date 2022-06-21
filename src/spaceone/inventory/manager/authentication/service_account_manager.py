@@ -65,6 +65,8 @@ class ServiceAccountManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 service_account_data = ServiceAccount(raw_data, strict=False)
                 _LOGGER.debug(f'service_account_data => {service_account_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class ServiceAccountManager(KubernetesManager):
                 service_account_resource = ServiceAccountResource({
                     'name': service_account_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': service_account_data,
                     'reference': service_account_data.reference()

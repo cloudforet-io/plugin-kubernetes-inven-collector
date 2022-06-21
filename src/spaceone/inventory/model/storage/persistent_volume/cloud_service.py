@@ -11,7 +11,17 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Persistent Volume
 '''
 
-persistent_volume_meta = CloudServiceMeta.set_layouts([])
+annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+persistent_volume_meta = CloudServiceMeta.set_layouts([annotations, labels])
 
 
 class ServiceResource(CloudServiceResource):

@@ -64,6 +64,8 @@ class StorageClassManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 storage_class_data = StorageClass(raw_data, strict=False)
                 _LOGGER.debug(f'storage_class_data => {storage_class_data.to_primitive()}')
 
@@ -73,6 +75,7 @@ class StorageClassManager(KubernetesManager):
                 storage_class_resource = StorageClassResource({
                     'name': storage_class_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': storage_class_data,
                     'reference': storage_class_data.reference()

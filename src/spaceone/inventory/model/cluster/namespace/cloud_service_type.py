@@ -27,8 +27,9 @@ cst_namespace.tags = {
 
 cst_namespace._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
-        TextDyField.data_source('Status', 'data.status.phase'),
+        EnumDyField.data_source('Status', 'data.status.phase', default_badge={
+            'green.500': ['Active'], 'red.500': ['Terminating']
+        }),
         TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Created', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Uid', 'data.uid', options={
@@ -38,7 +39,6 @@ cst_namespace._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
-        SearchField.set(name='Name', key='name'),
         SearchField.set(name='Status', key='data.status.phase'),
         SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Created', key='data.metadata.creation_timestamp')

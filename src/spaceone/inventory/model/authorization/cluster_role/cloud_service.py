@@ -11,7 +11,29 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Cluster Role
 '''
 
-cluster_role_meta = CloudServiceMeta.set_layouts([])
+cluster_role = ItemDynamicLayout.set_fields('Cluster Role', fields=[
+    DateTimeDyField.data_source('Creation Timestamp', 'data.metadata.creation_timestamp'),
+    TextDyField.data_source('Uid', 'data.metadata.uid'),
+    TextDyField.data_source('Aggregation Rule', 'data.aggregation_rule')
+])
+
+annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+rules = TableDynamicLayout.set_fields('Rules', fields=[
+    TextDyField.data_source('API Groups', 'data.rules.api_groups'),
+    ListDyField.data_source('Resources', 'data.rules.resources'),
+    ListDyField.data_source('Verbs', 'data.rules.verbs')
+])
+
+cluster_role_meta = CloudServiceMeta.set_layouts([cluster_role, annotations, labels, rules])
 
 
 class ServiceResource(CloudServiceResource):

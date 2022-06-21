@@ -65,6 +65,8 @@ class CustomResourceDefinitionManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 crd_data = CustomResourceDefinition(raw_data, strict=False)
                 #_LOGGER.debug(f'crd_data => {crd_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class CustomResourceDefinitionManager(KubernetesManager):
                 crd_resource = CustomResourceDefinitionResource({
                     'name': crd_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': crd_data,
                     'reference': crd_data.reference()

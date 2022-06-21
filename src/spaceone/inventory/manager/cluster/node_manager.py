@@ -64,8 +64,13 @@ class NodeManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
+                # To get display data
+                raw_data = self._get_display_data(raw_data)
+
                 node_data = Node(raw_data, strict=False)
-                #_LOGGER.debug(f'node_data => {node_data.to_primitive()}')
+                _LOGGER.debug(f'node_data => {node_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
@@ -73,6 +78,7 @@ class NodeManager(KubernetesManager):
                 node_resource = NodeResource({
                     'name': node_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': node_data,
                     'reference': node_data.reference()
@@ -96,4 +102,19 @@ class NodeManager(KubernetesManager):
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
+
+    def _get_display_data(self, raw_node):
+        raw_node['display'] = {
+            'status': self._get_node_status(raw_node)
+        }
+
+        return raw_node
+
+    @staticmethod
+    def _get_node_status(raw_node):
+        node_conditions = raw_node.get('status', {}).get('conditions', [])
+        for node_condition in node_conditions:
+            if node_condition.get('type', '') == "Ready":
+                return 'Ready' if node_condition.get('status', "False") == 'True' else 'NotReady'
+
 

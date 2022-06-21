@@ -63,6 +63,8 @@ class EventManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 event_data = Event(raw_data, strict=False)
                 _LOGGER.debug(f'event_data => {event_data.to_primitive()}')
 
@@ -72,6 +74,7 @@ class EventManager(KubernetesManager):
                 event_resource = EventResource({
                     'name': event_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': event_data,
                     'reference': event_data.reference()

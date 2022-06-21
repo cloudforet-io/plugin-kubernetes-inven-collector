@@ -194,8 +194,17 @@ pod_status_meta = ListDynamicLayout.set_layouts('Status', layouts=[pod_status_co
                                                                    pod_status_conditions_meta,
                                                                    pod_status_container_status_meta])
 
+annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
 
-pod_meta = CloudServiceMeta.set_layouts([pod_metadata_meta, pod_spec_meta, pod_container_meta,
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+pod_meta = CloudServiceMeta.set_layouts([pod_metadata_meta, annotations, labels, pod_spec_meta, pod_container_meta,
                                          pod_volume_meta, pod_status_meta])
 
 

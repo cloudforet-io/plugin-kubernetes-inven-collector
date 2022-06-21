@@ -64,6 +64,8 @@ class ConfigMapManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 config_map_data = ConfigMap(raw_data, strict=False)
                 #_LOGGER.debug(f'config_map_data => {config_map_data.to_primitive()}')
 
@@ -73,6 +75,7 @@ class ConfigMapManager(KubernetesManager):
                 config_map_resource = ConfigMapResource({
                     'name': config_map_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': config_map_data,
                     'reference': config_map_data.reference()

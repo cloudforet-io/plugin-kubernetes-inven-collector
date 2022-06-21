@@ -77,6 +77,8 @@ class NetworkPolicyManager(KubernetesManager):
                 )
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 network_policy_data = NetworkPolicy(raw_data, strict=False)
                 _LOGGER.debug(f'network_policy_data => {network_policy_data.to_primitive()}')
 
@@ -86,6 +88,7 @@ class NetworkPolicyManager(KubernetesManager):
                 network_policy_resource = NetworkPolicyResource({
                     'name': network_policy_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': network_policy_data,
                     'reference': network_policy_data.reference()

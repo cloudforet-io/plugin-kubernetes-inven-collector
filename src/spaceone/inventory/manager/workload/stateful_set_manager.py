@@ -65,6 +65,8 @@ class StatefulSetManager(KubernetesManager):
                     raw_readonly.get('spec', {}).get('selector', {})
                 )
 
+                labels = raw_data['metadata']['labels']
+
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 stateful_set_data = StatefulSet(raw_data, strict=False)
@@ -76,6 +78,7 @@ class StatefulSetManager(KubernetesManager):
                 stateful_set_resource = StatefulSetResource({
                     'name': stateful_set_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': stateful_set_data,
                     'reference': stateful_set_data.reference()

@@ -65,6 +65,8 @@ class PersistentVolumeManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 persistent_volume_data = PersistentVolume(raw_data, strict=False)
                 _LOGGER.debug(f'persistent_volume_data => {persistent_volume_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class PersistentVolumeManager(KubernetesManager):
                 persistent_volume_resource = PersistentVolumeResource({
                     'name': persistent_volume_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': persistent_volume_data,
                     'reference': persistent_volume_data.reference()

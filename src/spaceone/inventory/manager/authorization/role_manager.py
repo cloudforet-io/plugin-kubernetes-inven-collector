@@ -64,6 +64,8 @@ class RoleManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 role_data = Role(raw_data, strict=False)
                 #_LOGGER.debug(f'role_data => {role_data.to_primitive()}')
 
@@ -73,6 +75,7 @@ class RoleManager(KubernetesManager):
                 role_resource = RoleResource({
                     'name': role_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': role_data,
                     'reference': role_data.reference()

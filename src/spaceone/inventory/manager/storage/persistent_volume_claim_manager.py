@@ -65,6 +65,8 @@ class PersistentVolumeClaimManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 pvc_data = PersistentVolumeClaim(raw_data, strict=False)
                 _LOGGER.debug(f'pvc_data => {pvc_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class PersistentVolumeClaimManager(KubernetesManager):
                 pvc_resource = PersistentVolumeClaimResource({
                     'name': pvc_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': pvc_data,
                     'reference': pvc_data.reference()

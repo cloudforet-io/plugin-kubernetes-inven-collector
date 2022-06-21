@@ -13,6 +13,9 @@ Node
 
 node_base = ItemDynamicLayout.set_fields('Base', fields=[
     TextDyField.data_source('Name', 'name'),
+    EnumDyField.data_source('Status', 'data.display.status', default_badge={
+            'green.500': ['Ready'], 'red.500': ['NotReady']
+    }),
     TextDyField.data_source('Uid', 'data.metadata.uid'),
     DateTimeDyField.data_source('Created', 'data.metadata.creation_timestamp')
 ])
@@ -26,7 +29,7 @@ node_allocatable = ItemDynamicLayout.set_fields('Allocatable', root_path='data.s
     TextDyField.data_source('Pods', 'pods'),
 ])
 
-node_capacity = ItemDynamicLayout.set_fields('Capacity', fields=[
+node_capacity = ItemDynamicLayout.set_fields('Capacity', root_path='data.status.capacity', fields=[
     TextDyField.data_source('CPU', 'cpu'),
     TextDyField.data_source('Ephemeral-storage', 'ephemeral-storage'),
     TextDyField.data_source('Hugepages-1Gi', 'hugepages-1Gi'),
@@ -42,7 +45,7 @@ annotations = TableDynamicLayout.set_fields('Annotation', root_path='data.metada
     TextDyField.data_source('Value', 'value'),
 ])
 
-label = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
     TextDyField.data_source('Key', 'key'),
     TextDyField.data_source('Value', 'value')
 ])
@@ -63,7 +66,7 @@ images = TableDynamicLayout.set_fields('Images', root_path='data.status.images',
     ListDyField.data_source('Names', 'names')
 ])
 
-node_meta = CloudServiceMeta.set_layouts([node_layout, annotations, label, address, condition, images])
+node_meta = CloudServiceMeta.set_layouts([node_layout, annotations, labels, address, condition, images])
 
 
 class WorkLoadResource(CloudServiceResource):

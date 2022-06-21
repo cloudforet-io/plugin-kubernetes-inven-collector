@@ -66,6 +66,8 @@ class ServiceManager(KubernetesManager):
                     raw_readonly.get('spec', {}).get('selector', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 service_data = Service(raw_data, strict=False)
                 #_LOGGER.debug(f'service_data => {service_data.to_primitive()}')
 
@@ -75,6 +77,7 @@ class ServiceManager(KubernetesManager):
                 service_resource = ServiceResource({
                     'name': service_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': service_data,
                     'reference': service_data.reference()

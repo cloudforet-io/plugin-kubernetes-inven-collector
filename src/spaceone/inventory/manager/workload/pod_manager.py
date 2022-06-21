@@ -66,6 +66,8 @@ class PodManager(KubernetesManager):
                 raw_data['spec']['node_selector'] = self.convert_labels_format(raw_data.get('spec', {}).get('node_selector', {}))
                 raw_data['uid'] = raw_data['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 pod_data = Pod(raw_data, strict=False)
                 _LOGGER.debug(f'pod_data => {pod_data.to_primitive()}')
 
@@ -75,6 +77,7 @@ class PodManager(KubernetesManager):
                 pod_resource = PodResource({
                     'name': pod_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': pod_data,
                     'reference': pod_data.reference()

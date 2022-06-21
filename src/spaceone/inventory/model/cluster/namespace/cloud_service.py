@@ -18,7 +18,17 @@ namespace = ItemDynamicLayout.set_fields('Details', fields=[
     TextDyField.data_source('Uid', 'data.metadata.uid')
 ])
 
-namespace_meta = CloudServiceMeta.set_layouts([namespace])
+annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels', fields=[
+    TextDyField.data_source('Key', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+namespace_meta = CloudServiceMeta.set_layouts([namespace, annotations, labels])
 
 
 class WorkLoadResource(CloudServiceResource):

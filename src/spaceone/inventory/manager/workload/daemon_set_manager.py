@@ -73,6 +73,8 @@ class DaemonSetManager(KubernetesManager):
                     raw_readonly.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 daemon_set_data = DaemonSet(raw_data, strict=False)
                 _LOGGER.debug(f'deployment_data => {daemon_set_data.to_primitive()}')
 
@@ -82,6 +84,7 @@ class DaemonSetManager(KubernetesManager):
                 daemon_set_resource = DaemonSetResource({
                     'name': daemon_set_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': daemon_set_data,
                     'reference': daemon_set_data.reference()

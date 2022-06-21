@@ -27,7 +27,6 @@ cst_daemon_set.tags = {
 
 cst_daemon_set._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
         TextDyField.data_source('Number Ready', 'data.status.number_ready'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
@@ -39,7 +38,6 @@ cst_daemon_set._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
-        SearchField.set(name='Name', key='name'),
         SearchField.set(name='Namespace', key='data.metadata.namespace'),
         SearchField.set(name='Number Ready', key='data.status.number_ready'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp'),

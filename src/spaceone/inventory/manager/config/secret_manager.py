@@ -64,6 +64,8 @@ class SecretManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 secret_data = Secret(raw_data, strict=False)
                 #_LOGGER.debug(f'secret => {secret_data.to_primitive()}')
 
@@ -73,6 +75,7 @@ class SecretManager(KubernetesManager):
                 secret_resource = SecretResource({
                     'name': secret_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': secret_data,
                     'reference': secret_data.reference()

@@ -65,6 +65,8 @@ class NamespaceManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 namespace_data = Namespace(raw_data, strict=False)
                 #_LOGGER.debug(f'namespace_data => {namespace_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class NamespaceManager(KubernetesManager):
                 namespace_resource = NamespaceResource({
                     'name': namespace_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': namespace_data,
                     'reference': namespace_data.reference()

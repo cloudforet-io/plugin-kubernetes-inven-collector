@@ -27,7 +27,6 @@ cst_pvc.tags = {
 
 cst_pvc._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
         TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
         SizeField.data_source('Memory', 'data.status.capacity.memory'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
@@ -39,7 +38,6 @@ cst_pvc._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
-        SearchField.set(name='Name', key='name'),
         SearchField.set(name='CPU', key='data.status.capacity.cpu'),
         SearchField.set(name='Memory', key='data.status.capacity.memory'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')

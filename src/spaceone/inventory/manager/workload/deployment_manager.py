@@ -56,6 +56,7 @@ class DeploymentManager(KubernetesManager):
                 ##################################
                 # key:value type data need to be processed separately
                 # Convert object to dict
+
                 raw_data = deployment.to_dict()
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_data.get('metadata', {}).get('annotations', {}))
@@ -72,6 +73,8 @@ class DeploymentManager(KubernetesManager):
                     raw_data.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
                 raw_data['uid'] = raw_data['metadata']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 deployment_data = Deployment(raw_data, strict=False)
                 _LOGGER.debug(f'deployment_data => {deployment_data.to_primitive()}')
 
@@ -81,6 +84,7 @@ class DeploymentManager(KubernetesManager):
                 pod_resource = DeploymentResource({
                     'name': deployment_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': deployment_data,
                     'reference': deployment_data.reference()

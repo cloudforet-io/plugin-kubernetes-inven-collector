@@ -62,6 +62,9 @@ class ClusterRoleManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('annotations', {}))
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
+
+                labels = raw_data['metadata']['labels']
+
                 # aggregation_rule can be null
                 if raw_readonly.get('aggregation_rule', {}) is not None:
                     raw_data['aggregation_rule']['cluster_role_selectors'] = self._convert_cluster_role_selectors(
@@ -79,6 +82,7 @@ class ClusterRoleManager(KubernetesManager):
                 cluster_role_resource = ClusterRoleResource({
                     'name': cluster_role_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': cluster_role_data,
                     'reference': cluster_role_data.reference()

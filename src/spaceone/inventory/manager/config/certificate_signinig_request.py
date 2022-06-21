@@ -51,7 +51,7 @@ class CertificateSigningRequestManager(KubernetesManager):
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                _LOGGER.debug(f'csr => {csr}')
+                #_LOGGER.debug(f'csr => {csr}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
@@ -65,6 +65,8 @@ class CertificateSigningRequestManager(KubernetesManager):
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['spec']['uid']
 
+                labels = raw_data['metadata']['labels']
+
                 csr_data = CertificateSigningRequest(raw_data, strict=False)
                 _LOGGER.debug(f'csr_data => {csr_data.to_primitive()}')
 
@@ -74,6 +76,7 @@ class CertificateSigningRequestManager(KubernetesManager):
                 csr_resource = CertificateSigningRequestResource({
                     'name': csr_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': csr_data,
                     'reference': csr_data.reference()

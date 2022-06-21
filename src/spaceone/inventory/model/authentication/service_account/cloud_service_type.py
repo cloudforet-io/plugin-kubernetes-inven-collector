@@ -27,11 +27,9 @@ cst_service_account.tags = {
 
 cst_service_account._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
-        TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
-        SizeField.data_source('Memory', 'data.status.capacity.memory'),
+        TextDyField.data_source('NameSpace', 'data.metadata.namespace'),
+        TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
-        TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })
@@ -39,9 +37,8 @@ cst_service_account._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
-        SearchField.set(name='Name', key='name'),
-        SearchField.set(name='CPU', key='data.status.capacity.cpu'),
-        SearchField.set(name='Memory', key='data.status.capacity.memory'),
+        SearchField.set(name='NameSpace', key='data.metadata.namespace'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],
 

@@ -27,7 +27,6 @@ cst_cluster.tags = {
 
 cst_cluster._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
         EnumDyField.data_source('Status', 'data.state', default_badge={
             'green.500': ['Ready'], 'red.500': ['NotReady']
         }),
@@ -42,7 +41,6 @@ cst_cluster._metadata = CloudServiceTypeMeta.set_meta(
     ],
 
     search=[
-        SearchField.set(name='Name', key='name'),
         SearchField.set(name='Status', key='data.state'),
         SearchField.set(name='Version', key='data.version'),
         SearchField.set(name='Kubernetes Provider', key='data.kubernetes_provider'),
