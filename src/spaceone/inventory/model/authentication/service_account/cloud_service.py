@@ -28,8 +28,8 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
     TextDyField.data_source('Value', 'value')
 ])
 
-secret = SimpleTableDynamicLayout.set_fields('Secret', fields=[
-    TextDyField.data_source('Name', 'data.secrets')
+secret = SimpleTableDynamicLayout.set_fields('Secret', root_path='data.secrets', fields=[
+    TextDyField.data_source('Name', 'name')
 ])
 
 service_account_meta = CloudServiceMeta.set_layouts([service_account, annotations, labels, secret])

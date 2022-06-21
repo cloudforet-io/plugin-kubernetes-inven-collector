@@ -57,13 +57,16 @@ address = TableDynamicLayout.set_fields('Address', root_path='data.status.addres
 
 condition = TableDynamicLayout.set_fields('Condition', root_path='data.status.conditions', fields=[
     TextDyField.data_source('Type', 'type'),
-    TextDyField.data_source('Status', 'status'),
+    EnumDyField.data_source('Status', 'state', default_badge={
+        'green.500': ['true'], 'red.500': ['false']
+    }),
     TextDyField.data_source('Message', 'message'),
     TextDyField.data_source('Reason', 'reason')
 ])
 
 images = TableDynamicLayout.set_fields('Images', root_path='data.status.images', fields=[
-    ListDyField.data_source('Names', 'names')
+    ListDyField.data_source('Names', 'names'),
+    TextDyField.data_source('Size Bytes', 'size_bytes')
 ])
 
 node_meta = CloudServiceMeta.set_layouts([node_layout, annotations, labels, address, condition, images])

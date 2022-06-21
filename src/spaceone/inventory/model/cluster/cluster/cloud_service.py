@@ -29,7 +29,9 @@ cluster = ItemDynamicLayout.set_fields('Cluster', fields=[
 cluster_condition = TableDynamicLayout.set_fields('Condition', root_path='data.node_conditions', fields=[
     TextDyField.data_source('Type', 'type'),
     TextDyField.data_source('Name', 'name'),
-    TextDyField.data_source('Status', 'status'),
+    EnumDyField.data_source('Status', 'state', default_badge={
+        'green.500': ['true'], 'red.500': ['false']
+    }),
     TextDyField.data_source('Message', 'message'),
     TextDyField.data_source('Reason', 'reason'),
     DateTimeDyField.data_source('Last Heartbeat Time', 'last_heartbeat_time'),

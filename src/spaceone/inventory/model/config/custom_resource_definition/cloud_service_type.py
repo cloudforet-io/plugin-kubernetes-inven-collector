@@ -27,10 +27,8 @@ cst_custom_resource_definition.tags = {
 
 cst_custom_resource_definition._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('CPU', 'data.status.capacity.cpu'),
-        SizeField.data_source('Memory', 'data.status.capacity.memory'),
+        TextDyField.data_source('Generation', 'data.metadata.generation'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
-        TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })
@@ -38,8 +36,7 @@ cst_custom_resource_definition._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
-        SearchField.set(name='CPU', key='data.status.capacity.cpu'),
-        SearchField.set(name='Memory', key='data.status.capacity.memory'),
+        SearchField.set(name='Generation', key='data.metadata.generation'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],
 

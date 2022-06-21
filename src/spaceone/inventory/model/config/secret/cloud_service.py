@@ -11,6 +11,14 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Secret
 '''
 
+secret_base = ItemDynamicLayout.set_fields('Base', fields=[
+    TextDyField.data_source('Type', 'data.type'),
+    TextDyField.data_source('Name', 'data.metadata.name'),
+    TextDyField.data_source('Namespace', 'data.metadata.namespace'),
+    DateTimeDyField.data_source('Creation Timestamp', 'data.metadata.creation_timestamp'),
+    TextDyField.data_source('Uid', 'data.uid')
+])
+
 annotations = TableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
     TextDyField.data_source('Key', 'key'),
     TextDyField.data_source('Value', 'value')
@@ -21,7 +29,7 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
     TextDyField.data_source('Value', 'value')
 ])
 
-secret_meta = CloudServiceMeta.set_layouts([annotations, labels])
+secret_meta = CloudServiceMeta.set_layouts([secret_base, annotations, labels])
 
 
 class ServiceResource(CloudServiceResource):
