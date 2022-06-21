@@ -27,6 +27,7 @@ cst_certificate_signing_request.tags = {
 
 cst_certificate_signing_request._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
+        TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Expiration Seconds', 'data.spec.expiration_seconds'),
         TextDyField.data_source('Uid', 'data.uid', options={
@@ -36,6 +37,7 @@ cst_certificate_signing_request._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Expiration Seconds', key='data.spec.expiration_seconds'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],

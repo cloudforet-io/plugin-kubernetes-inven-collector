@@ -28,6 +28,7 @@ cst_stateful_set.tags = {
 cst_stateful_set._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
+        TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Number Ready', 'data.status.number_ready'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
@@ -39,6 +40,7 @@ cst_stateful_set._metadata = CloudServiceTypeMeta.set_meta(
     search=[
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Namespace', key='data.metadata.namespace'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Number Ready', key='data.status.number_ready'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp'),
         SearchField.set(name='Update Strategy', key='data.spec.update_strategy.type')

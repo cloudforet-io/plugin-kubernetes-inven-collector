@@ -11,7 +11,7 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 CUSTOM RESOURCE DEFINITION
 '''
 
-metadata = ItemDynamicLayout.set_fields('Name', root_path='data.metadata', fields=[
+metadata = ItemDynamicLayout.set_fields('Metadata', root_path='data.metadata', fields=[
     TextDyField.data_source('Uid', 'uid'),
     TextDyField.data_source('Name', 'name'),
     TextDyField.data_source('Generation', 'generation'),

@@ -27,6 +27,7 @@ cst_cluster_role.tags = {
 
 cst_cluster_role._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
+        TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
@@ -35,6 +36,7 @@ cst_cluster_role._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Namespace', key='data.metadata.namespace'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],

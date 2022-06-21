@@ -38,7 +38,8 @@ cst_node._metadata = CloudServiceTypeMeta.set_meta(
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='CPU', key='data.status.capacity.cpu'),
         SearchField.set(name='Memory', key='data.status.capacity.memory'),
-        SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
+        SearchField.set(name='Start Time', key='data.metadata.creation_timestamp'),
+        SearchField.set(name='Cluster', key='account'),
     ],
 
     widget=[

@@ -27,7 +27,7 @@ cst_service_account.tags = {
 
 cst_service_account._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('NameSpace', 'data.metadata.namespace'),
+        TextDyField.data_source('Namespace', 'data.metadata.namespace'),
         TextDyField.data_source('Cluster', 'account'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Uid', 'data.uid', options={

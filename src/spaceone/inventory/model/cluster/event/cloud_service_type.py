@@ -27,7 +27,7 @@ cst_event.tags = {
 
 cst_event._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
-        TextDyField.data_source('Name', 'name'),
+        TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Status', 'data.status.phase'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
         TextDyField.data_source('Uid', 'data.uid', options={
@@ -38,6 +38,7 @@ cst_event._metadata = CloudServiceTypeMeta.set_meta(
     search=[
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Name', key='name'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Status', key='data.status.phase'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],

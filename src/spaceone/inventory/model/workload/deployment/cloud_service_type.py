@@ -29,6 +29,7 @@ cst_deployment.tags = {
 cst_deployment._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
+        TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Available Replicas', 'data.status.ready_replicas'),
         TextDyField.data_source('Target Replicas', 'data.status.replicas'),
         TextDyField.data_source('Strategy', 'data.spec.strategy.type'),
@@ -41,6 +42,7 @@ cst_deployment._metadata = CloudServiceTypeMeta.set_meta(
     search=[
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Namespace', key='data.namespace'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Available Replicas', key='data.status.ready_replicas'),
         SearchField.set(name='Target Replicas', key='data.status.replicas'),
         SearchField.set(name='Strategy', key='data.spec.strategy.type'),

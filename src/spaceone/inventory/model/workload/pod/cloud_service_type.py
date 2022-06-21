@@ -29,6 +29,7 @@ cst_pod.tags = {
 cst_pod._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
+        TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Pod IP', 'data.status.pod_ip'),
         EnumDyField.data_source('Status', 'data.status.phase', default_state={
             'safe': ['Running', 'Succeeded'],
@@ -45,6 +46,7 @@ cst_pod._metadata = CloudServiceTypeMeta.set_meta(
     search=[
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Namespace', key='data.namespace'),
+        SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Pod IP', key='data.status.pod_ip'),
         SearchField.set(name='Node Name', key='data.node_name'),
         SearchField.set(name='Host IP', key='data.status.host_ip'),
