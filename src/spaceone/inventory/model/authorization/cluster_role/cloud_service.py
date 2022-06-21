@@ -27,10 +27,10 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
     TextDyField.data_source('Value', 'value')
 ])
 
-rules = TableDynamicLayout.set_fields('Rules', fields=[
-    ListDyField.data_source('API Groups', 'data.rules.api_groups'),
-    ListDyField.data_source('Resources', 'data.rules.resources'),
-    ListDyField.data_source('Verbs', 'data.rules.verbs')
+rules = TableDynamicLayout.set_fields('Rules', root_path='data.rules', fields=[
+    ListDyField.data_source('API Groups', 'api_groups'),
+    ListDyField.data_source('Resources', 'resources'),
+    ListDyField.data_source('Verbs', 'verbs')
 ])
 
 cluster_role_meta = CloudServiceMeta.set_layouts([cluster_role, annotations, labels, rules])
