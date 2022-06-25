@@ -67,6 +67,8 @@ class ReleaseManager(KubernetesManager):
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = uid
+
+                labels = raw_data['metadata']['labels']
                 #_LOGGER.debug(f'raw_data => {raw_data}')
                 release_data = Release(raw_data, strict=False)
                 #_LOGGER.debug(f'release_data => {release_data.to_primitive()}')
@@ -77,6 +79,7 @@ class ReleaseManager(KubernetesManager):
                 release_resource = ReleaseResource({
                     'name': release_name,
                     'account': cluster_name,
+                    'tags': labels,
                     'region_code': region,
                     'data': release_data,
                     'reference': release_data.reference()

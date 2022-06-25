@@ -30,9 +30,9 @@ cst_release._metadata = CloudServiceTypeMeta.set_meta(
         TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Status', 'data.data.release.info.status'),
         TextDyField.data_source('Version', 'data.data.release.version'),
-        TextDyField.data_source('Chart Name', 'metadata.name'),
-        TextDyField.data_source('Home', 'metadata.home'),
-        TextDyField.data_source('App Version', 'metadata.app_version'),
+        TextDyField.data_source('Chart Name', 'data.data.release.chart.metadata.name'),
+        TextDyField.data_source('Home', 'data.data.release.chart.metadata.home'),
+        TextDyField.data_source('App Version', 'data.data.release.chart.metadata.app_version'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
     ],
 
