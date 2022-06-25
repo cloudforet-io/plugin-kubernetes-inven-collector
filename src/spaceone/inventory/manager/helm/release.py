@@ -2,6 +2,7 @@ import logging
 import base64
 import gzip
 import json
+import time
 
 from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.helm.release import ReleaseConnector
@@ -45,11 +46,12 @@ class ReleaseManager(KubernetesManager):
 
         for release in list_all_release:
             try:
-                #_LOGGER.debug(f'helm => {helm.to_dict()}')
+                #_LOGGER.debug(f'helm => {release.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
                 release_name = release.metadata.name
+                uid = '-'.join([release.metadata.uid, release.metadata.namespace])
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
@@ -61,6 +63,10 @@ class ReleaseManager(KubernetesManager):
                 # Convert object to dict
                 encoded_data = release.to_dict()
                 raw_data = self._base64_to_dict(encoded_data)
+                raw_readonly = raw_data
+                raw_data['metadata']['labels'] = self.convert_labels_format(
+                    raw_readonly.get('metadata', {}).get('labels', {}))
+                raw_data['uid'] = uid
                 #_LOGGER.debug(f'raw_data => {raw_data}')
                 release_data = Release(raw_data, strict=False)
                 #_LOGGER.debug(f'release_data => {release_data.to_primitive()}')

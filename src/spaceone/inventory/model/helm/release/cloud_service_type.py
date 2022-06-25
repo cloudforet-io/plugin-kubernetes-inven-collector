@@ -28,15 +28,21 @@ cst_release.tags = {
 cst_release._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Cluster', 'account'),
+        TextDyField.data_source('Status', 'data.data.release.info.status'),
+        TextDyField.data_source('Version', 'data.data.release.version'),
+        TextDyField.data_source('Chart Name', 'metadata.name'),
+        TextDyField.data_source('Home', 'metadata.home'),
+        TextDyField.data_source('App Version', 'metadata.app_version'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
-        TextDyField.data_source('Uid', 'data.uid', options={
-            'is_optional': True
-        })
     ],
 
     search=[
-        SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Cluster', key='account'),
+        SearchField.set(name='Status', key='data.data.release.info.status'),
+        SearchField.set(name='Version', key='data.data.release.version'),
+        SearchField.set(name='Chart Name', key='metadata.name'),
+        SearchField.set(name='Home', key='metadata.home'),
+        SearchField.set(name='App Version', key='metadata.app_version'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')
     ],
 
