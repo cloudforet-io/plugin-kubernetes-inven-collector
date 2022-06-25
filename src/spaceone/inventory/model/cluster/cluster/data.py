@@ -14,6 +14,7 @@ class NodeCondition(Model):
 
 
 class Cluster(Model):
+    uid = StringType(serialize_when_none=False)
     name = StringType(serialize_when_none=False)
     state = StringType(serialize_when_none=False)
     kubernetes_provider = StringType(serialize_when_none=False)
@@ -28,6 +29,6 @@ class Cluster(Model):
 
     def reference(self):
         return {
-            "resource_id": "",
+            "resource_id": self.uid,
             "external_link": f""
         }

@@ -51,7 +51,6 @@ class ClusterManager(KubernetesManager):
             # key:value type data need to be processed separately
             # Convert object to dict
             raw_data = cluster
-            raw_readonly = cluster
 
             cluster_data = Cluster(raw_data, strict=False)
             _LOGGER.debug(f'cluster_data => {cluster_data.to_primitive()}')
@@ -93,6 +92,7 @@ class ClusterManager(KubernetesManager):
 
 
         return {
+            "uid": cluster_name,
             "name": cluster_name,
             "state": self._get_cluster_state(list_node),
             "kubernetes_provider": self.get_kubernetes_provider(list_node),
