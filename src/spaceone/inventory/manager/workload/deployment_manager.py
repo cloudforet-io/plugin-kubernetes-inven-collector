@@ -58,25 +58,28 @@ class DeploymentManager(KubernetesManager):
                 # Convert object to dict
 
                 raw_data = deployment.to_dict()
+                raw_readonly = deployment.to_dict()
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_data.get('metadata', {}).get('annotations', {}))
                 raw_data['metadata']['labels'] = self.convert_labels_format(raw_data.get('metadata', {}).get('labels', {}))
+
                 raw_data['spec']['node_selector'] = self.convert_labels_format(
                     raw_data.get('spec', {}).get('node_selector', {}))
                 raw_data['spec']['selector']['match_labels'] = self.convert_labels_format(
                     raw_data.get('spec', {}).get('selector', {}).get('match_labels', {}))
+
                 raw_data['spec']['template']['metadata']['annotations'] = self.convert_labels_format(
-                    raw_data.get('spec', {}).get('template', {}).get('metadata', {}).get('annotations', {}))
+                    raw_readonly.get('spec', {}).get('template', {}).get('metadata', {}).get('annotations', {}))
                 raw_data['spec']['template']['metadata']['labels'] = self.convert_labels_format(
-                    raw_data.get('spec', {}).get('template', {}).get('metadata', {}).get('labels', {}))
+                    raw_readonly.get('spec', {}).get('template', {}).get('metadata', {}).get('labels', {}))
                 raw_data['spec']['template']['spec']['node_selector'] = self.convert_labels_format(
-                    raw_data.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
-                raw_data['uid'] = raw_data['metadata']['uid']
+                    raw_readonly.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
+                raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 labels = raw_data['metadata']['labels']
 
                 deployment_data = Deployment(raw_data, strict=False)
-                _LOGGER.debug(f'deployment_data => {deployment_data.to_primitive()}')
+                #_LOGGER.debug(f'deployment_data => {deployment_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

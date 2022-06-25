@@ -109,8 +109,8 @@ class ReleaseManager(KubernetesManager):
         gzip_bytes = base64.decodebytes(base64_bytes)
         message_bytes = gzip.decompress(gzip_bytes)
         helm_data['data']['release'] = json.loads(message_bytes.decode('utf-8'))
-        _LOGGER.debug(f'keys => {helm_data.keys()}')
-        _LOGGER.debug(f'_base64_to_dict => {helm_data}')
+        #_LOGGER.debug(f'keys => {helm_data.keys()}')
+        #_LOGGER.debug(f'_base64_to_dict => {helm_data}')
 
         return helm_data
 

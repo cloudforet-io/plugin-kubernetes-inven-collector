@@ -69,7 +69,7 @@ class PodManager(KubernetesManager):
                 labels = raw_data['metadata']['labels']
 
                 pod_data = Pod(raw_data, strict=False)
-                _LOGGER.debug(f'pod_data => {pod_data.to_primitive()}')
+                #_LOGGER.debug(f'pod_data => {pod_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

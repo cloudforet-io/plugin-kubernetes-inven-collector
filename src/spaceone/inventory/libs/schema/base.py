@@ -251,6 +251,17 @@ class VolumeMount(Model):
     sub_path_expr = StringType(serialize_when_none=False)
 
 
+class LifecycleHandler(Model):
+    exec = ModelType(ExecAction, serialize_when_none=False),
+    http_get = ModelType(HTTPGetAction, serialize_when_none=False),
+    tcp_socket = ModelType(TCPSocketAction, serialize_when_none=False)
+
+
+class ContainerLifeCycle(Model):
+    post_start = ModelType(LifecycleHandler, serialize_when_none=False)
+    pre_stop = ModelType(LifecycleHandler, serialize_when_none=False)
+
+
 class Container(Model):
     args = ListType(StringType(), serialize_when_none=False)
     command = ListType(StringType(), serialize_when_none=False)
@@ -258,7 +269,7 @@ class Container(Model):
     env_from = StringType(serialize_when_none=False)
     image = StringType(serialize_when_none=False)
     image_pull_policy = StringType(serialize_when_none=False)
-    lifecycle = StringType(serialize_when_none=False)
+    lifecycle = ModelType(ContainerLifeCycle, deserialize_from="lifecycle", serialize_when_none=False)
     liveness_probe = ModelType(Probe, serialize_when_none=False)
     name = StringType(serialize_when_none=False)
     ports = ListType(ModelType(ContainerPort), serialize_when_none=False)
@@ -618,7 +629,7 @@ class Volume(Model):
 
 class PodSpec(Model):
     active_deadline_seconds = StringType(serialize_when_none=False)
-    affinity = ModelType(Affinity, serialize_when_none=False)
+    #affinity = ModelType(Affinity, serialize_when_none=False)
     automount_service_account_token = BooleanType(serialize_when_none=False)
     containers = ListType(ModelType(Container), serialize_when_none=False)
     dns_config = ModelType(PodDNSConfig, serialize_when_none=False)
@@ -630,7 +641,7 @@ class PodSpec(Model):
     host_network = BooleanType(serialize_when_none=False)
     host_pid = BooleanType(serialize_when_none=False)
     hostname = StringType(serialize_when_none=False)
-    image_pull_secrets = ModelType(LocalObjectReference, serialize_when_none=False)
+    image_pull_secrets = ListType(ModelType(LocalObjectReference), serialize_when_none=False)
     init_containers = ListType(ModelType(Container), serialize_when_none=False)
     node_name = StringType(serialize_when_none=False)
     node_selector = ListType(ModelType(Labels), serialize_when_none=False)

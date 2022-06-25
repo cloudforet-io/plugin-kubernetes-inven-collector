@@ -50,7 +50,7 @@ class StatefulSetManager(KubernetesManager):
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
 
-                _LOGGER.debug(f'stateful_set => {stateful_set}')
+                #_LOGGER.debug(f'stateful_set => {stateful_set}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
@@ -61,16 +61,24 @@ class StatefulSetManager(KubernetesManager):
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('annotations', {}))
                 raw_data['metadata']['labels'] = self.convert_labels_format(raw_readonly.get('metadata', {}).get('labels', {}))
+
                 raw_data['spec']['selector'] = self.convert_labels_format(
-                    raw_readonly.get('spec', {}).get('selector', {})
-                )
+                    raw_readonly.get('spec', {}).get('selector', {}))
+
+                raw_data['spec']['template']['metadata']['annotations'] = self.convert_labels_format(
+                    raw_readonly.get('spec', {}).get('template', {}).get('metadata', {}).get('annotations', {}))
+                raw_data['spec']['template']['metadata']['labels'] = self.convert_labels_format(
+                    raw_readonly.get('spec', {}).get('template', {}).get('metadata', {}).get('labels', {}))
+                raw_data['spec']['template']['spec']['node_selector'] = self.convert_labels_format(
+                    raw_readonly.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
+                raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 labels = raw_data['metadata']['labels']
 
                 raw_data['uid'] = raw_readonly['metadata']['uid']
 
                 stateful_set_data = StatefulSet(raw_data, strict=False)
-                _LOGGER.debug(f'stateful_set_data => {stateful_set_data.to_primitive()}')
+                #_LOGGER.debug(f'stateful_set_data => {stateful_set_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource

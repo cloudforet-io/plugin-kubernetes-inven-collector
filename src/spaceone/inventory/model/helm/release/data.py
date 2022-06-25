@@ -31,8 +31,8 @@ class HelmChart(Model):
 
 
 class HelmInfo(Model):
-    first_deployed = DateTimeType(serialize_when_none=False)
-    last_deployed = DateTimeType(serialize_when_none=False)
+    first_deployed = StringType(serialize_when_none=False)
+    last_deployed = StringType(serialize_when_none=False)
     deleted = StringType(serialize_when_none=False)
     description = StringType(serialize_when_none=False)
     status = StringType(serialize_when_none=False)
