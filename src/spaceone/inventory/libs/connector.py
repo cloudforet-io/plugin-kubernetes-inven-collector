@@ -11,7 +11,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class KubernetesConnector(BaseConnector):
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         kwargs
             - schema
@@ -24,7 +24,7 @@ class KubernetesConnector(BaseConnector):
             - token_uri: ...
             - ...
         """
-        super().__init__(transaction=None, config=None)
+        super().__init__(*args, **kwargs)
         secret_data = kwargs.get('secret_data')
 
         # Configure API Client
