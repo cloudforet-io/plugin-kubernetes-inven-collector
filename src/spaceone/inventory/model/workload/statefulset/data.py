@@ -2,6 +2,7 @@ from schematics import Model
 from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
 from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, PodTemplateSpec
 from spaceone.inventory.model.storage.persistent_volume_claim.data import PersistentVolumeClaim
+from spaceone.inventory.model.workload.pod.data import Pod
 
 
 class StatefulSetPersistentVolumeClaimRetentionPolicy(Model):
@@ -60,6 +61,8 @@ class StatefulSet(Model):
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     spec = ModelType(StatefulSetSpec, serialize_when_none=False)
     status = ModelType(StatefulSetStatus, serialize_when_none=False)
+    age = StringType(serialize_when_none=False)
+    pods = ListType(ModelType(Pod), serialize_when_none=False)
 
     def reference(self):
         return {

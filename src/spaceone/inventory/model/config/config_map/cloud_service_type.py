@@ -29,7 +29,11 @@ cst_config_map._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
         TextDyField.data_source('Cluster', 'account'),
-        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
+        TextDyField.data_source('Age', 'data.age'),
+        TextDyField.data_source('Keys', 'data.keys'),
+        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp', options={
+            'is_optional': True
+        }),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })

@@ -12,18 +12,27 @@ CUSTOM RESOURCE DEFINITION
 '''
 
 metadata = ItemDynamicLayout.set_fields('Metadata', root_path='data.metadata', fields=[
-    TextDyField.data_source('Uid', 'uid'),
     TextDyField.data_source('Name', 'name'),
+    TextDyField.data_source('Uid', 'uid'),
     TextDyField.data_source('Generation', 'generation'),
     DateTimeDyField.data_source('Creation Timestamp', 'creation_timestamp')
 ])
 
-spec = ItemDynamicLayout.set_fields('Spec', root_path='data.spec', fields=[
+crd_spec_base = ItemDynamicLayout.set_fields('Spec', root_path='data.spec', fields=[
     TextDyField.data_source('Conversion', 'conversion'),
     TextDyField.data_source('Group', 'group'),
     TextDyField.data_source('Names', 'names'),
     TextDyField.data_source('Scope', 'scope')
 ])
+
+crd_spec_names_base = SimpleTableDynamicLayout.set_fields('Names', root_path='data.spec.names', fields=[
+    TextDyField.data_source('Name', 'key'),
+    TextDyField.data_source('Value', 'value')
+])
+
+crd_spec = ListDynamicLayout.set_layouts('Spec', layouts=[
+    crd_spec_base,
+    crd_spec_names_base])
 
 versions = TableDynamicLayout.set_fields('Versions', root_path='data.spec.versions', fields=[
     TextDyField.data_source('Name', 'name'),
@@ -48,7 +57,13 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
     TextDyField.data_source('Value', 'value')
 ])
 
-crd_meta = CloudServiceMeta.set_layouts([metadata, conditions, annotations, labels])
+additional_printer_columns = TableDynamicLayout.set_fields('Additional Printer Columns', root_path='spec.additional_printer_columns', fields=[
+    TextDyField.data_source('Name', 'name'),
+    TextDyField.data_source('Type', 'type'),
+    TextDyField.data_source('Json Path', 'json_path')
+])
+
+crd_meta = CloudServiceMeta.set_layouts([metadata, crd_spec, versions, conditions, additional_printer_columns, annotations, labels])
 
 
 class ServiceResource(CloudServiceResource):

@@ -25,7 +25,7 @@ setup(
     version=VERSION,
     description='Kubernetes inventory collector',
     long_description='',
-    url='https://www.spaceone.dev/',
+    url='https://www.cloudforet.io/',
     author='MEGAZONE SpaceONE Team',
     author_email='admin@spaceone.dev',
     license='Apache License 2.0',
@@ -35,8 +35,10 @@ setup(
         'spaceone-api',
         'spaceone-tester',
         'schematics',
-        'kubernetes',
-        'MarkupSafe>=2.0.0rc2'
+        'MarkupSafe>=2.0.0rc2',
+        'requests',
+        'beautifulsoup4',
+        'kubernetes'
     ],
     package_data={
         'spaceone': ['inventory/model/*/*/widget/*.yml']

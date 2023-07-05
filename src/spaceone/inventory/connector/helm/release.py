@@ -11,7 +11,7 @@ class ReleaseConnector(KubernetesConnector):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def list_secret(self, **query) -> list:
+    def list_helm_labeled_secret(self, **query) -> list:
         response = self.core_v1_client.list_secret_for_all_namespaces(label_selector="owner=helm")
         return response.items
 

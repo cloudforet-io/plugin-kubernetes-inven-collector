@@ -12,5 +12,5 @@ class NamespaceConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_namespace(self, **query) -> list:
-        response = self.core_v1_client.list_namespace()
+        response = self.core_v1_client.list_namespace(watch=False)
         return response.items

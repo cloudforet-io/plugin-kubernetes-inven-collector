@@ -12,11 +12,11 @@ class ClusterConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_node(self, **query) -> list:
-        response = self.core_v1_client.list_node()
+        response = self.core_v1_client.list_node(watch=False)
         return response.items
 
     def list_pod(self, **query) -> list:
-        response = self.core_v1_client.list_pod_for_all_namespaces()
+        response = self.core_v1_client.list_pod_for_all_namespaces(watch=False)
         return response.items
 
 

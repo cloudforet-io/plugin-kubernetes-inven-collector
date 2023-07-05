@@ -79,7 +79,7 @@ class HelmRelease(Model):
     name = StringType(serialize_when_none=False)
     info = ModelType(HelmInfo, deserialize_from='info', serialize_when_none=False)
     chart = ModelType(HelmChart, deserialize_from='chart', serialize_when_none=False)
-    manifest = StringType(serialize_when_none=False)
+    #manifest = StringType(serialize_when_none=False)
     version = StringType(serialize_when_none=False)
     namespace = StringType(serialize_when_none=False)
     """
@@ -97,7 +97,6 @@ class Release(Model):
     type = StringType(serialize_when_none=False)
     kind = StringType(serialize_when_none=False)
     uid = StringType(serialize_when_none=False)
-    #metadata = ModelType(HelmMetadata, serialize_when_none=False)
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     data = ModelType(HelmData, serialize_when_none=False)
 

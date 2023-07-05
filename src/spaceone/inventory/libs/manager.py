@@ -1,15 +1,13 @@
-import math
 import json
 import logging
-import ipaddress
-from urllib.parse import urlparse
+from datetime import datetime, timezone
 
 from spaceone.core.manager import BaseManager
+
 from spaceone.inventory.conf.cloud_service_conf import REGION_INFO
 from spaceone.inventory.libs.connector import KubernetesConnector
-from spaceone.inventory.libs.schema.region import RegionResource, RegionResponse
 from spaceone.inventory.libs.schema.cloud_service import ErrorResourceResponse
-
+from spaceone.inventory.libs.schema.region import RegionResource, RegionResponse
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +42,7 @@ class KubernetesManager(BaseManager):
         total_resources = []
 
         try:
-            # Collect Cloud Service Type3wee
+            # Collect Cloud Service Type
             total_resources.extend(self.collect_cloud_service_type(params))
 
             # Collect Cloud Service
@@ -57,7 +55,8 @@ class KubernetesManager(BaseManager):
 
         except Exception as e:
             _LOGGER.error(f'[collect_resources] {e}', exc_info=True)
-            error_resource_response = self.generate_error_response(e, self.cloud_service_types[0].resource.group, self.cloud_service_types[0].resource.name)
+            error_resource_response = self.generate_error_response(e, self.cloud_service_types[0].resource.group,
+                                                                   self.cloud_service_types[0].resource.name)
             total_resources.append(error_resource_response)
 
         return total_resources
@@ -263,4 +262,42 @@ class KubernetesManager(BaseManager):
         else:
             return 'unknown'
 
+    def get_age(self, creation_timestamp):
+        if creation_timestamp is None:
+            creation_timestamp = datetime.now(timezone.utc)
+        now = datetime.now(timezone.utc)
+        delta = now - creation_timestamp
+        age = str(delta)
+        return age
 
+    def get_containers(self, status_container_statuses, spec_containers):
+        if spec_containers is None:
+            spec_containers = []
+        if status_container_statuses is None:
+            status_container_statuses = []
+
+        ready_container_count = 0
+        for i in status_container_statuses:
+            if i['ready'] == True:
+                ready_container_count = ready_container_count + 1
+        containers = str(ready_container_count)+'/'+str(len(spec_containers))
+        return containers
+
+    def _convert_pod_data(self, pod):
+        raw_pod = pod.to_dict()
+        raw_pod['metadata']['annotations'] = self.convert_labels_format(
+            raw_pod.get('metadata', {}).get('annotations', {}))
+        raw_pod['metadata']['labels'] = self.convert_labels_format(raw_pod.get('metadata', {}).get('labels', {}))
+        raw_pod['spec']['node_selector'] = self.convert_labels_format(
+            raw_pod.get('spec', {}).get('node_selector', {}))
+        raw_pod['uid'] = raw_pod['metadata']['uid']
+        raw_pod['age'] = self.get_age(raw_pod.get('metadata', {}).get('creation_timestamp', ''))
+        raw_pod['containers'] = self.get_containers(raw_pod.get('status', {}).get('container_statuses', []),
+                                                    raw_pod.get('spec', {}).get('containers', []))
+        return raw_pod
+
+    def get_config_data_keys(self, config_data):
+        keys = ''
+        for k in config_data.keys():
+            keys = k + ',' + keys
+        return keys

@@ -21,7 +21,3 @@ from spaceone.inventory.connector.config.certificate_signing_request import Cert
 from spaceone.inventory.connector.config.custom_resource_definition import CustomResourceDefinitionConnector
 from spaceone.inventory.connector.helm.release import ReleaseConnector
 
-
-
-
-

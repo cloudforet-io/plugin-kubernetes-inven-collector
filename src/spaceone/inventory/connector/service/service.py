@@ -12,5 +12,5 @@ class ServiceConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_service(self, **query) -> list:
-        response = self.core_v1_client.list_service_for_all_namespaces()
+        response = self.core_v1_client.list_service_for_all_namespaces(watch=False)
         return response.items

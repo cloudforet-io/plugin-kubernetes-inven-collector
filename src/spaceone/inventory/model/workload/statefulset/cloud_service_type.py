@@ -18,7 +18,7 @@ cst_stateful_set.name = 'StatefulSet'
 cst_stateful_set.provider = 'kubernetes'
 cst_stateful_set.group = 'WorkLoad'
 cst_stateful_set.service_code = 'StatefulSet'
-cst_stateful_set.is_primary = True
+cst_stateful_set.is_primary = False
 cst_stateful_set.is_major = False
 cst_stateful_set.labels = ['Container']
 cst_stateful_set.tags = {
@@ -28,10 +28,13 @@ cst_stateful_set.tags = {
 cst_stateful_set._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
-        TextDyField.data_source('Cluster', 'account'),
-        TextDyField.data_source('Number Ready', 'data.status.number_ready'),
-        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
+        TextDyField.data_source('Ready', 'data.status.number_ready'),
+        TextDyField.data_source('Age', 'data.age'),
         TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
+        TextDyField.data_source('Cluster', 'account'),
+        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp', options={
+            'is_optional': True
+        }),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })

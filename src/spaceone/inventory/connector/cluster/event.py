@@ -12,5 +12,5 @@ class EventConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_node(self, **query) -> list:
-        response = self.event_v1_client.list_event_for_all_namespaces()
+        response = self.event_v1_client.list_event_for_all_namespaces(watch=False)
         return response.items

@@ -53,10 +53,16 @@ class CustomResourceDefinitionVersion(Model):
     storage = BooleanType(serialize_when_none=False)
 
 
+class CustomResourceDefinitionNamesData(Model):
+    key = StringType(serialize_when_none=False)
+    value = StringType(serialize_when_none=False)
+
+
 class CustomResourceDefinitionSpec(Model):
     conversion = ModelType(CustomResourceConversion, serialize_when_none=False)
     group = StringType(serialize_when_none=False)
-    names = ModelType(CustomResourceDefinitionNames, serialize_when_none=False)
+    #names = ModelType(CustomResourceDefinitionNames, serialize_when_none=False)
+    names = ListType(ModelType(CustomResourceDefinitionNamesData), serialize_when_none=False)
     preserveUnknownFields = BooleanType(serialize_when_none=False)
     scope = StringType(serialize_when_none=False)
     versions = ListType(ModelType(CustomResourceDefinitionVersion), serialize_when_none=False)
@@ -83,6 +89,8 @@ class CustomResourceDefinition(Model):
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     spec = ModelType(CustomResourceDefinitionSpec, serialize_when_none=False)
     status = ModelType(CustomResourceDefinitionStatus, serialize_when_none=False)
+    age = StringType(serialize_when_none=False)
+    additional_printer_columns = ListType(ModelType(CustomResourceColumnDefinition), serialize_when_none=False)
 
     def reference(self):
         return {

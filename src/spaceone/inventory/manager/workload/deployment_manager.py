@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timezone
 
 from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.workload.deployment import DeploymentConnector
@@ -39,17 +40,20 @@ class DeploymentManager(KubernetesManager):
         pod_conn: DeploymentConnector = self.locator.get_connector(self.connector_name, **params)
         list_all_deployment = pod_conn.list_deployment()
         #_LOGGER.debug(f'list_all_deployment => {list_all_deployment}')
+        list_all_pod = pod_conn.list_pod()
+        #_LOGGER.debug(f'list_all_pod => {list_all_pod}')
+        list_all_replicaset = pod_conn.list_replicaset()
+        #_LOGGER.debug(f'list_all_replicaset => {list_all_replicaset}')
 
         for deployment in list_all_deployment:
             try:
-                #_LOGGER.debug(f'deployment => {deployment.to_dict()}')
+                # _LOGGER.debug(f'deployment => {deployment.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
                 deployment_name = deployment.metadata.name
                 cluster_name = self.get_cluster_name(secret_data)
                 region = 'global'
-
 
                 ##################################
                 # 2. Make Base Data
@@ -61,7 +65,8 @@ class DeploymentManager(KubernetesManager):
                 raw_readonly = deployment.to_dict()
                 raw_data['metadata']['annotations'] = self.convert_labels_format(
                     raw_data.get('metadata', {}).get('annotations', {}))
-                raw_data['metadata']['labels'] = self.convert_labels_format(raw_data.get('metadata', {}).get('labels', {}))
+                raw_data['metadata']['labels'] = self.convert_labels_format(
+                    raw_data.get('metadata', {}).get('labels', {}))
 
                 raw_data['spec']['node_selector'] = self.convert_labels_format(
                     raw_data.get('spec', {}).get('node_selector', {}))
@@ -74,12 +79,16 @@ class DeploymentManager(KubernetesManager):
                     raw_readonly.get('spec', {}).get('template', {}).get('metadata', {}).get('labels', {}))
                 raw_data['spec']['template']['spec']['node_selector'] = self.convert_labels_format(
                     raw_readonly.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
-                raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data['uid'] = raw_readonly.get('metadata', {}).get('uid', '')
+                raw_data['ready'] = self._get_ready(raw_readonly.get('status', {}))
+                raw_data['age'] = self.get_age(raw_readonly.get('metadata', {}).get('creation_timestamp', ''))
+                raw_data['pods'] = self._get_pods(list_all_pod, list_all_replicaset,
+                                                  raw_readonly.get('metadata', {}).get('uid', ''))
 
                 labels = raw_data['metadata']['labels']
 
                 deployment_data = Deployment(raw_data, strict=False)
-                #_LOGGER.debug(f'deployment_data => {deployment_data.to_primitive()}')
+                # _LOGGER.debug(f'deployment_data => {deployment_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
@@ -111,4 +120,31 @@ class DeploymentManager(KubernetesManager):
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
+
+    @staticmethod
+    def _get_ready(status):
+        if status is None:
+            status = {}
+
+        ready = str(status.get('ready_replicas', 0)) + '/' + str(status.get('replicas', 0))
+        return ready
+
+    def _get_pods(self, list_pods, list_replicasets, deployment_uid):
+        # owner reference of replicaset and deployment uid need to be matched
+        # owner reference of pod and replicaset uid need to be matched
+        # pod -> replicaset -> deployment
+        pods_for_deployment = []
+        for pod in list_pods:
+            raw_pod = pod.to_dict()
+            pod_owner_reference = raw_pod.get('metadata', {}).get('owner_references', [])[0]
+            for replicaset in list_replicasets:
+                raw_replicaset = replicaset.to_dict()
+                replicaset_owner_reference = raw_replicaset.get('metadata', {}).get('owner_references', [])[0]
+                if deployment_uid == replicaset_owner_reference.get('uid', '') and \
+                        raw_replicaset.get('metadata', {}).get('uid', '') == pod_owner_reference.get('uid', ''):
+                    matched_pod = self._convert_pod_data(pod)
+                    pods_for_deployment.append(matched_pod)
+        return pods_for_deployment
+
+
 

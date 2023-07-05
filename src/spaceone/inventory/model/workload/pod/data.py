@@ -76,6 +76,9 @@ class Pod(Model):
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     spec = ModelType(PodSpec, serialize_when_none=False)
     status = ModelType(PodStatus, serialize_when_none=False)
+    restarts = IntType(serialize_when_none=False)
+    age = StringType(serialize_when_none=False)
+    containers = StringType(serialize_when_none=False)
 
     def reference(self):
         return {
