@@ -21,7 +21,6 @@ cst_deployment.service_code = 'Deployment'
 cst_deployment.is_primary = True
 cst_deployment.is_major = True
 cst_deployment.labels = ['Container']
-cst_deployment.is_primary = True
 cst_deployment.tags = {
     'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/deployment.svg',
 }
@@ -30,10 +29,18 @@ cst_deployment._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
         TextDyField.data_source('Cluster', 'account'),
-        TextDyField.data_source('Available Replicas', 'data.status.ready_replicas'),
-        TextDyField.data_source('Target Replicas', 'data.status.replicas'),
-        TextDyField.data_source('Strategy', 'data.spec.strategy.type'),
+        TextDyField.data_source('Ready', 'data.ready'),
+        TextDyField.data_source('Age', 'data.age'),
         DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
+        TextDyField.data_source('Available Replicas', 'data.status.ready_replicas', options={
+            'is_optional': True
+        }),
+        TextDyField.data_source('Target Replicas', 'data.status.replicas', options={
+            'is_optional': True
+        }),
+        TextDyField.data_source('Strategy', 'data.spec.strategy.type', options={
+            'is_optional': True
+        }),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })
@@ -43,6 +50,8 @@ cst_deployment._metadata = CloudServiceTypeMeta.set_meta(
         SearchField.set(name='Uid', key='data.uid'),
         SearchField.set(name='Namespace', key='data.namespace'),
         SearchField.set(name='Cluster', key='account'),
+        SearchField.set(name='Ready', key='data.ready'),
+        SearchField.set(name='Age', key='data.age'),
         SearchField.set(name='Available Replicas', key='data.status.ready_replicas'),
         SearchField.set(name='Target Replicas', key='data.status.replicas'),
         SearchField.set(name='Strategy', key='data.spec.strategy.type'),

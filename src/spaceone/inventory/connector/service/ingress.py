@@ -12,7 +12,7 @@ class IngressConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_ingress(self, **query) -> list:
-        response = self.networking_v1_client.list_ingress_for_all_namespaces()
+        response = self.networking_v1_client.list_ingress_for_all_namespaces(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

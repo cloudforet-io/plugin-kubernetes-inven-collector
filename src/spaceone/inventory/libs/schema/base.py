@@ -37,6 +37,7 @@ class BaseResponse(Model):
 class ReferenceModel(Model):
     class Option:
         serialize_when_none = False
+
     resource_id = StringType(required=False, serialize_when_none=False)
     external_link = StringType(required=False, serialize_when_none=False)
 
@@ -74,6 +75,14 @@ class LabelSelector(Model):
     match_labels = ListType(ModelType(MatchLabel))
 
 
+class OwnerReference(Model):
+    block_owner_deletion = BooleanType(serialize_when_none=False)
+    controller = BooleanType(serialize_when_none=False)
+    kind = StringType(serialize_when_none=False)
+    name = StringType(serialize_when_none=False)
+    uid = StringType(serialize_when_none=False)
+
+
 class ObjectMeta(Model):
     annotations = ListType(ModelType(Annotations), serialize_when_none=False)
     creation_timestamp = DateTimeType(serialize_when_none=False)
@@ -86,6 +95,7 @@ class ObjectMeta(Model):
     name = StringType(serialize_when_none=False)
     namespace = StringType(serialize_when_none=False)
     uid = StringType(serialize_when_none=False)
+    owner_references = ListType(ModelType(OwnerReference), serialize_when_none=False)
 
 
 class PodAffinityTerm(Model):
@@ -276,7 +286,7 @@ class Container(Model):
     readiness_probe = ModelType(Probe, serialize_when_none=False)
     resource = ModelType(ResourceLimits, serialize_when_none=False)
     security_context = ModelType(SecurityContext, serialize_when_none=False)
-    startup_probe = StringType(serialize_when_none=False)
+    startup_probe = ModelType(Probe, serialize_when_none=False)
     stdin = StringType(serialize_when_none=False)
     stdin_once = StringType(serialize_when_none=False)
     termination_message_path = StringType(serialize_when_none=False)
@@ -629,7 +639,7 @@ class Volume(Model):
 
 class PodSpec(Model):
     active_deadline_seconds = StringType(serialize_when_none=False)
-    #affinity = ModelType(Affinity, serialize_when_none=False)
+    # affinity = ModelType(Affinity, serialize_when_none=False)
     automount_service_account_token = BooleanType(serialize_when_none=False)
     containers = ListType(ModelType(Container), serialize_when_none=False)
     dns_config = ModelType(PodDNSConfig, serialize_when_none=False)

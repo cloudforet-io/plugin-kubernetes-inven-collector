@@ -12,7 +12,7 @@ class RoleConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_role(self, **query) -> list:
-        response = self.rbac_authorization_v1_client.list_role_for_all_namespaces()
+        response = self.rbac_authorization_v1_client.list_role_for_all_namespaces(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

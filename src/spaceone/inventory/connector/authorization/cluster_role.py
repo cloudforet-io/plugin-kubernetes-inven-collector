@@ -12,7 +12,7 @@ class ClusterRoleConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_cluster_role(self, **query) -> list:
-        response = self.rbac_authorization_v1_client.list_cluster_role()
+        response = self.rbac_authorization_v1_client.list_cluster_role(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

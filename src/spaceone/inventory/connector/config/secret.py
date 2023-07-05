@@ -12,7 +12,7 @@ class SecretConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_secret(self, **query) -> list:
-        response = self.core_v1_client.list_secret_for_all_namespaces()
+        response = self.core_v1_client.list_secret_for_all_namespaces(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

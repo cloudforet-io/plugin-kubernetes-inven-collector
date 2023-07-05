@@ -12,7 +12,7 @@ class CertificateSigningRequestConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_csr(self, **query) -> list:
-        response = self.certificate_v1_client.list_certificate_signing_request()
+        response = self.certificate_v1_client.list_certificate_signing_request(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

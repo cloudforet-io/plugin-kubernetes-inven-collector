@@ -41,10 +41,14 @@ class ReleaseManager(KubernetesManager):
         # List all information through connector
         ##################################
         release_conn: ReleaseConnector = self.locator.get_connector(self.connector_name, **params)
-        list_all_release = release_conn.list_secret()
-        #_LOGGER.debug(f'list_all_release => {list_all_release}')
+        # Helm Labeled secrets are helm history for each release
+        list_helm_labeled_secret = release_conn.list_helm_labeled_secret()
+        #list_all_release = self._get_all_releases(list_helm_labeled_secret)
 
-        for release in list_all_release:
+        #_LOGGER.debug(f'list_all_release => {list_helm_labeled_secret}')
+
+        #for release in list_all_release:
+        for release in list_helm_labeled_secret:
             try:
                 #_LOGGER.debug(f'helm => {release.to_dict()}')
                 ##################################
@@ -69,9 +73,9 @@ class ReleaseManager(KubernetesManager):
                 raw_data['uid'] = uid
 
                 labels = raw_data['metadata']['labels']
-                #_LOGGER.debug(f'raw_data => {raw_data}')
+                _LOGGER.debug(f'raw_data => {raw_data}')
                 release_data = Release(raw_data, strict=False)
-                #_LOGGER.debug(f'release_data => {release_data.to_primitive()}')
+                _LOGGER.debug(f'release_data => {release_data.to_primitive()}')
 
                 ##################################
                 # 3. Make Return Resource
@@ -103,6 +107,73 @@ class ReleaseManager(KubernetesManager):
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
+
+
+    def _get_all_releases(self, list_all_secrets):
+        all_releases = []
+        all_name_and_namespaces = self._get_release_name_and_namespace(list_all_secrets)
+        _LOGGER.debug(f'_get_all_releases => {all_name_and_namespaces}')
+
+        for n in all_name_and_namespaces:
+            latest_release = self._get_latest_release(n, list_all_secrets)
+            all_releases.append(latest_release)
+
+        return all_releases
+
+
+    def _get_latest_release(self, name_and_namespaces, list_all_secrets):
+
+        return
+
+
+    def _get_release_name_and_namespace(self, list_all_secrets):
+        list_release_name_and_namespace = []
+        for secret in list_all_secrets:
+            i = {
+                'release_name': self._get_release_name(secret.metadata.name),
+                'namespace': secret.metadata.namespace
+            }
+            # release_name and namespace pair can be duplicated
+            if i not in list_release_name_and_namespace:
+                list_release_name_and_namespace.append(i)
+
+        return list_release_name_and_namespace
+
+    @staticmethod
+    def _get_release_name(helm_secret_full_name):
+        if len(helm_secret_full_name) > 2:
+            return helm_secret_full_name.split('.')[-2]
+        else:
+            return ''
+
+
+    def _get_single_release_info(self, list_all_secrets):
+        return {
+            'release_name': '',
+            'namespace': '',
+            'revision': '',
+            'updated_timestamp': '',
+            'status': '',
+            'chart': '',
+            'app_version': ''
+        }
+
+    def _get_history(self, release_name, release_namespace, list_all_secrets):
+        history = {
+            'release_name': '',
+            'namespace': '',
+            'updated': '',
+            'status': '',
+            'chart': '',
+            'app_version': '',
+            'description': ''
+        }
+        list_history = []
+        return list_history
+
+    def _get_chart_info(self, release_name, release_namespace, list_all_secrets):
+        matched_secrets = {}
+        return matched_secrets.get('data', {}).get('release', {}).get('chart', {})
 
     @staticmethod
     def _base64_to_dict(helm_data):

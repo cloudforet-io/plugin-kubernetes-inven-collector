@@ -12,7 +12,7 @@ class PersistentVolumeClaimConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_persistent_volume_claim(self, **query) -> list:
-        response = self.core_v1_client.list_persistent_volume_claim_for_all_namespaces()
+        response = self.core_v1_client.list_persistent_volume_claim_for_all_namespaces(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

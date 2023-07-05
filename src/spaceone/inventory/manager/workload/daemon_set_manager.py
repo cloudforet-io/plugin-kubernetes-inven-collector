@@ -39,6 +39,8 @@ class DaemonSetManager(KubernetesManager):
         pod_conn: DaemonSetConnector = self.locator.get_connector(self.connector_name, **params)
         list_all_daemon_set = pod_conn.list_daemon_set()
         #_LOGGER.debug(f'list_all_deployment => {list_all_deployment}')
+        list_all_pod = pod_conn.list_pod()
+        # _LOGGER.debug(f'list_all_pod => {list_all_pod}')
 
         for daemon_set in list_all_daemon_set:
             try:
@@ -74,6 +76,8 @@ class DaemonSetManager(KubernetesManager):
                 raw_data['spec']['template']['spec']['node_selector'] = self.convert_labels_format(
                     raw_readonly.get('spec', {}).get('template', {}).get('spec', {}).get('node_selector', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data['age'] = self.get_age(raw_readonly.get('metadata', {}).get('creation_timestamp', ''))
+                raw_data['pods'] = self._get_pods(list_all_pod, raw_readonly.get('metadata', {}).get('uid', ''))
 
                 labels = raw_data['metadata']['labels']
 
@@ -110,4 +114,14 @@ class DaemonSetManager(KubernetesManager):
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
+
+    def _get_pods(self, list_pods, daemon_set_uid):
+        pods_for_daemon_set = []
+        for pod in list_pods:
+            raw_pod = pod.to_dict()
+            pod_owner_reference = raw_pod.get('metadata', {}).get('owner_references', [])[0]
+            if daemon_set_uid == pod_owner_reference.get('uid', ''):
+                matched_pod = self._convert_pod_data(pod)
+                pods_for_daemon_set.append(matched_pod)
+        return pods_for_daemon_set
 

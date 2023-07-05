@@ -18,7 +18,7 @@ cst_daemon_set.name = 'DaemonSet'
 cst_daemon_set.provider = 'kubernetes'
 cst_daemon_set.group = 'WorkLoad'
 cst_daemon_set.service_code = 'DaemonSet'
-cst_daemon_set.is_primary = True
+cst_daemon_set.is_primary = False
 cst_daemon_set.is_major = False
 cst_daemon_set.labels = ['Container']
 cst_daemon_set.tags = {
@@ -28,10 +28,16 @@ cst_daemon_set.tags = {
 cst_daemon_set._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
         TextDyField.data_source('Namespace', 'data.metadata.namespace'),
+        TextDyField.data_source('Ready', 'data.status.number_ready'),
+        TextDyField.data_source('Node Selector', 'data.spec.node_selector'),
+        TextDyField.data_source('Age', 'data.age'),
         TextDyField.data_source('Cluster', 'account'),
-        TextDyField.data_source('Number Ready', 'data.status.number_ready'),
-        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
-        TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type'),
+        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp', options={
+            'is_optional': True
+        }),
+        TextDyField.data_source('Update Strategy', 'data.spec.update_strategy.type', options={
+            'is_optional': True
+        }),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })

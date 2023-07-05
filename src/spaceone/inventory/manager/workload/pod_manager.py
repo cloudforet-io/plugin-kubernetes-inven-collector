@@ -39,11 +39,6 @@ class PodManager(KubernetesManager):
         pod_conn: PodConnector = self.locator.get_connector(self.connector_name, **params)
         list_all_pod = pod_conn.list_pod()
         #_LOGGER.debug(f'list_all_pod => {list_all_pod}')
-        """
-        <class 'kubernetes.client.models.v1_pod.V1Pod'>
-        'V1Pod' object is not iterable
-        So object cannot convert by schematics
-        """
 
         for pod in list_all_pod:
             try:
@@ -65,6 +60,10 @@ class PodManager(KubernetesManager):
                 raw_data['metadata']['labels'] = self.convert_labels_format(raw_data.get('metadata', {}).get('labels', {}))
                 raw_data['spec']['node_selector'] = self.convert_labels_format(raw_data.get('spec', {}).get('node_selector', {}))
                 raw_data['uid'] = raw_data['metadata']['uid']
+                raw_data['restarts'] = self._get_restarts(raw_data.get('status', {}).get('container_statuses', []))
+                raw_data['age'] = self.get_age(raw_data.get('metadata', {}).get('creation_timestamp', ''))
+                raw_data['containers'] = self.get_containers(raw_data.get('status', {}).get('container_statuses', []),
+                                                             raw_data.get('spec', {}).get('containers', []))
 
                 labels = raw_data['metadata']['labels']
 
@@ -101,4 +100,14 @@ class PodManager(KubernetesManager):
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
+
+    @staticmethod
+    def _get_restarts(container_statuses):
+        if container_statuses is None:
+            container_statuses = []
+        if len(container_statuses) >= 1:
+            restarts = container_statuses[0].get('restart_count', 0)
+        else:
+            restarts = 0
+        return restarts
 

@@ -39,7 +39,7 @@ class CustomResourceDefinitionManager(KubernetesManager):
         ##################################
         crd_conn: CustomResourceDefinitionConnector = self.locator.get_connector(self.connector_name, **params)
         list_all_crd = crd_conn.list_custom_resource_definition()
-        #_LOGGER.debug(f'list_all_crd => {list_all_crd}')
+        _LOGGER.debug(f'list_all_crd => {list_all_crd}')
 
         for crd in list_all_crd:
             try:
@@ -64,6 +64,9 @@ class CustomResourceDefinitionManager(KubernetesManager):
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data['age'] = self.get_age(raw_readonly.get('metadata', {}).get('creation_timestamp', ''))
+                raw_data['spec']['names'] = self._convert_names_format(raw_readonly.get('spec', {}).get('names', {}))
+                raw_data['additional_printer_columns'] = self._get_additional_printer_columns(raw_readonly.get('spec', {}).get('versions', []))
 
                 labels = raw_data['metadata']['labels']
 
@@ -101,3 +104,18 @@ class CustomResourceDefinitionManager(KubernetesManager):
 
         return collected_cloud_services, error_responses
 
+    @staticmethod
+    def _convert_names_format(names):
+        convert_names = []
+        if names is not None:
+            for k, v in names.items():
+                convert_names.append({
+                    'key': k,
+                    'value': str(v)
+                })
+        return convert_names
+
+    @staticmethod
+    def _get_additional_printer_columns(versions):
+        additional_printer_columns = versions[0].get('additional_printer_columns', [])
+        return additional_printer_columns

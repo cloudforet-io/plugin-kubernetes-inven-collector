@@ -1,6 +1,7 @@
 from schematics import Model
 from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
 from spaceone.inventory.libs.schema.base import ObjectMeta, PodSpec, LabelSelector, PodTemplateSpec
+from spaceone.inventory.model.workload.pod.data import Pod
 
 
 class RollingUpdateDeployment(Model):
@@ -51,6 +52,9 @@ class Deployment(Model):
     metadata = ModelType(ObjectMeta, serialize_when_none=False)
     spec = ModelType(DeploymentSpec, serialize_when_none=False)
     status = ModelType(DeploymentStatus, serialize_when_none=False)
+    ready = StringType(serialized_name=False)
+    age = StringType(serialize_when_none=False)
+    pods = ListType(ModelType(Pod), serialize_when_none=False)
 
     def reference(self):
         return {

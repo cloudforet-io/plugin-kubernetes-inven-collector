@@ -12,7 +12,7 @@ class StorageClassConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_storage_class(self, **query) -> list:
-        response = self.storage_v1_client.list_storage_class()
+        response = self.storage_v1_client.list_storage_class(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

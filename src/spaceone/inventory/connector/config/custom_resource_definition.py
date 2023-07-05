@@ -12,7 +12,7 @@ class CustomResourceDefinitionConnector(KubernetesConnector):
         super().__init__(**kwargs)
 
     def list_custom_resource_definition(self, **query) -> list:
-        response = self.api_extensions_v1_client.list_custom_resource_definition()
+        response = self.api_extensions_v1_client.list_custom_resource_definition(watch=False)
         return response.items
 
     # Check kubernetes version to get ingress client

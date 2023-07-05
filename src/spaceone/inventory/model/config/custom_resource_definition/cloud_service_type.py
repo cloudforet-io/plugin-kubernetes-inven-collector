@@ -18,8 +18,8 @@ cst_custom_resource_definition.name = 'CustomResourceDefinition'
 cst_custom_resource_definition.provider = 'kubernetes'
 cst_custom_resource_definition.group = 'Config'
 cst_custom_resource_definition.service_code = 'CustomResourceDefinition'
-cst_custom_resource_definition.is_primary = True
-cst_custom_resource_definition.is_major = True
+cst_custom_resource_definition.is_primary = False
+cst_custom_resource_definition.is_major = False
 cst_custom_resource_definition.labels = ['Application Integration']
 cst_custom_resource_definition.tags = {
     'spaceone:icon': 'https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes/custom_resource_definition.svg',
@@ -27,9 +27,14 @@ cst_custom_resource_definition.tags = {
 
 cst_custom_resource_definition._metadata = CloudServiceTypeMeta.set_meta(
     fields=[
+        TextDyField.data_source('Group', 'data.spec.group'),
+        TextDyField.data_source('Scope', 'data.spec.scope'),
+        TextDyField.data_source('Age', 'data.age'),
         TextDyField.data_source('Cluster', 'account'),
         TextDyField.data_source('Generation', 'data.metadata.generation'),
-        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp'),
+        DateTimeDyField.data_source('Start Time', 'data.metadata.creation_timestamp', options={
+            'is_optional': True
+        }),
         TextDyField.data_source('Uid', 'data.uid', options={
             'is_optional': True
         })
@@ -37,6 +42,9 @@ cst_custom_resource_definition._metadata = CloudServiceTypeMeta.set_meta(
 
     search=[
         SearchField.set(name='Uid', key='data.uid'),
+        SearchField.set(name='Scope', key='data.spec.scope'),
+        SearchField.set(name='Group', key='data.spec.group'),
+        SearchField.set(name='Age', key='data.age'),
         SearchField.set(name='Cluster', key='account'),
         SearchField.set(name='Generation', key='data.metadata.generation'),
         SearchField.set(name='Start Time', key='data.metadata.creation_timestamp')

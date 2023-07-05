@@ -11,17 +11,18 @@ from spaceone.inventory.libs.schema.cloud_service import CloudServiceResource, C
 Pod
 '''
 
-pod_metadata_base_meta = ItemDynamicLayout.set_fields('Metadata', root_path='data.metadata', fields=[
-    TextDyField.data_source('Uid', 'uid'),
-    TextDyField.data_source('Name', 'name'),
-    TextDyField.data_source('Namespace', 'namespace'),
-    TextDyField.data_source('Cluster Name', 'cluster_name'),
-    DateTimeDyField.data_source('Creation Timestamp', 'creation_timestamp'),
-    TextDyField.data_source('Deletion grace Period Seconds', 'deletion_grace_period_seconds'),
-    DateTimeDyField.data_source('Deletion Timestamp', 'deletion_timestamp'),
-    TextDyField.data_source('Finalizers', 'finalizers'),
-    TextDyField.data_source('Generate Name', 'generate_name'),
-    TextDyField.data_source('Generation', 'generation')
+pod_metadata_base_meta = ItemDynamicLayout.set_fields('Metadata', root_path='data', fields=[
+    DateTimeDyField.data_source('Creation Timestamp', 'metadata.creation_timestamp'),
+    TextDyField.data_source('Name', 'metadata.name'),
+    TextDyField.data_source('Namespace', 'metadata.namespace'),
+    TextDyField.data_source('Cluster Name', 'metadata.cluster_name'),
+    TextDyField.data_source('Status', 'status.phase'),
+    TextDyField.data_source('Node', 'status.host_ip'),
+    TextDyField.data_source('Pod IP', 'status.pod_ip'),
+    TextDyField.data_source('Pod IPs', 'status.pod_i_ps'),
+    TextDyField.data_source('Service Account', 'spec.service_account_name'),
+    TextDyField.data_source('Deletion grace Period Seconds', 'metadata.deletion_grace_period_seconds'),
+    DateTimeDyField.data_source('Deletion Timestamp', 'metadata.deletion_timestamp'),
 ])
 
 pod_metadata_annotations_meta = SimpleTableDynamicLayout.set_fields('Annotations', root_path='data.metadata.annotations', fields=[
@@ -201,8 +202,8 @@ labels = TableDynamicLayout.set_fields('Labels', root_path='data.metadata.labels
     TextDyField.data_source('Value', 'value')
 ])
 
-pod_meta = CloudServiceMeta.set_layouts([pod_metadata_meta, annotations, labels, pod_spec_meta, pod_container_meta,
-                                         pod_container_init_meta, pod_volume_meta, pod_status_meta])
+pod_meta = CloudServiceMeta.set_layouts([pod_metadata_meta, pod_status_meta, pod_spec_meta, pod_volume_meta, pod_container_meta,
+                                         pod_container_init_meta, annotations, labels])
 
 
 class WorkLoadResource(CloudServiceResource):

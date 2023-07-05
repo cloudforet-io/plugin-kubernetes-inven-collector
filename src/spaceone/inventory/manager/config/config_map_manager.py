@@ -63,6 +63,9 @@ class ConfigMapManager(KubernetesManager):
                 raw_data['metadata']['labels'] = self.convert_labels_format(
                     raw_readonly.get('metadata', {}).get('labels', {}))
                 raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data['age'] = self.get_age(raw_readonly.get('metadata', {}).get('creation_timestamp', ''))
+                raw_data['keys'] = self.get_config_data_keys(raw_readonly.get('data', {}))
+                raw_data['data'] = self.convert_labels_format(raw_readonly.get('data', {}))
 
                 labels = raw_data['metadata']['labels']
 
