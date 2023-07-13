@@ -1,6 +1,14 @@
 from schematics import Model
-from schematics.types import ListType, StringType, PolyModelType, DictType, ModelType, DateTimeType, BooleanType, \
-    IntType
+from schematics.types import (
+    ListType,
+    StringType,
+    PolyModelType,
+    DictType,
+    ModelType,
+    DateTimeType,
+    BooleanType,
+    IntType,
+)
 
 from spaceone.inventory.libs.schema.metadata.dynamic_layout import BaseLayoutField
 from spaceone.inventory.libs.schema.metadata.dynamic_search import BaseDynamicSearch
@@ -27,8 +35,8 @@ class BaseMetaData(Model):
 
 
 class BaseResponse(Model):
-    state = StringType(default='SUCCESS', choices=('SUCCESS', 'FAILURE', 'TIMEOUT'))
-    message = StringType(default='')
+    state = StringType(default="SUCCESS", choices=("SUCCESS", "FAILURE", "TIMEOUT"))
+    message = StringType(default="")
     resource_type = StringType(required=True)
     match_rules = DictType(ListType(StringType), serialize_when_none=False)
     resource = PolyModelType(Model, default={})
@@ -42,9 +50,9 @@ class ReferenceModel(Model):
     external_link = StringType(required=False, serialize_when_none=False)
 
 
-'''
+"""
 Model Data
-'''
+"""
 
 
 # Developer defined model
@@ -71,7 +79,9 @@ class LabelSelectorRequirement(Model):
 
 
 class LabelSelector(Model):
-    match_expressions = ListType(ModelType(LabelSelectorRequirement), serialize_when_none=False)
+    match_expressions = ListType(
+        ModelType(LabelSelectorRequirement), serialize_when_none=False
+    )
     match_labels = ListType(ModelType(MatchLabel))
 
 
@@ -111,32 +121,42 @@ class WeightedPodAffinityTerm(Model):
 
 
 class PodAffinity(Model):
-    preferred_during_scheduling_ignored_during_execution = ListType(ModelType(WeightedPodAffinityTerm),
-                                                                    serialize_when_none=False)
-    required_during_scheduling_ignored_during_execution = ListType(ModelType(PodAffinityTerm),
-                                                                   serialize_when_none=False)
+    preferred_during_scheduling_ignored_during_execution = ListType(
+        ModelType(WeightedPodAffinityTerm), serialize_when_none=False
+    )
+    required_during_scheduling_ignored_during_execution = ListType(
+        ModelType(PodAffinityTerm), serialize_when_none=False
+    )
 
 
 class PodAntiAffinity(Model):
-    preferred_during_scheduling_ignored_during_execution = ListType(ModelType(WeightedPodAffinityTerm),
-                                                                    serialize_when_none=False)
-    required_during_scheduling_ignored_during_execution = ListType(ModelType(PodAffinityTerm),
-                                                                   serialize_when_none=False)
+    preferred_during_scheduling_ignored_during_execution = ListType(
+        ModelType(WeightedPodAffinityTerm), serialize_when_none=False
+    )
+    required_during_scheduling_ignored_during_execution = ListType(
+        ModelType(PodAffinityTerm), serialize_when_none=False
+    )
 
 
 class NodeSelectorRequirement(Model):
-    key = StringType(serialize_when_none=False),
-    operator = StringType(serialize_when_none=False),
+    key = (StringType(serialize_when_none=False),)
+    operator = (StringType(serialize_when_none=False),)
     values = ListType(StringType(), serialize_when_none=False)
 
 
 class NodeSelectorTerm(Model):
-    matchExpressions = ListType(ModelType(NodeSelectorRequirement), serialize_when_none=False)
-    matchFields = ListType(ModelType(NodeSelectorRequirement), serialize_when_none=False)
+    matchExpressions = ListType(
+        ModelType(NodeSelectorRequirement), serialize_when_none=False
+    )
+    matchFields = ListType(
+        ModelType(NodeSelectorRequirement), serialize_when_none=False
+    )
 
 
 class NodeSelector(Model):
-    node_selector_terms = ListType(ModelType(NodeSelectorTerm), serialize_when_none=False)
+    node_selector_terms = ListType(
+        ModelType(NodeSelectorTerm), serialize_when_none=False
+    )
 
 
 class PreferredSchedulingTerm(Model):
@@ -145,9 +165,12 @@ class PreferredSchedulingTerm(Model):
 
 
 class NodeAffinity(Model):
-    preferred_during_scheduling_ignored_during_execution = ListType(ModelType(PreferredSchedulingTerm),
-                                                                    serialize_when_none=False)
-    required_during_scheduling_ignored_during_execution = ModelType(NodeSelector, serialize_when_none=False)
+    preferred_during_scheduling_ignored_during_execution = ListType(
+        ModelType(PreferredSchedulingTerm), serialize_when_none=False
+    )
+    required_during_scheduling_ignored_during_execution = ModelType(
+        NodeSelector, serialize_when_none=False
+    )
 
 
 class Affinity(Model):
@@ -191,7 +214,9 @@ class SecurityContext(Model):
     run_as_user = IntType(serialize_when_none=False)
     se_linux_options = ModelType(SELinuxOptions, serialize_when_none=False)
     seccomp_profile = ModelType(SeccompProfile, serialize_when_none=False)
-    windows_options = ModelType(WindowsSecurityContextOptions, serialize_when_none=False)
+    windows_options = ModelType(
+        WindowsSecurityContextOptions, serialize_when_none=False
+    )
 
 
 class ExecAction(Model):
@@ -262,8 +287,8 @@ class VolumeMount(Model):
 
 
 class LifecycleHandler(Model):
-    exec = ModelType(ExecAction, serialize_when_none=False),
-    http_get = ModelType(HTTPGetAction, serialize_when_none=False),
+    exec = (ModelType(ExecAction, serialize_when_none=False),)
+    http_get = (ModelType(HTTPGetAction, serialize_when_none=False),)
     tcp_socket = ModelType(TCPSocketAction, serialize_when_none=False)
 
 
@@ -279,7 +304,9 @@ class Container(Model):
     env_from = StringType(serialize_when_none=False)
     image = StringType(serialize_when_none=False)
     image_pull_policy = StringType(serialize_when_none=False)
-    lifecycle = ModelType(ContainerLifeCycle, deserialize_from="lifecycle", serialize_when_none=False)
+    lifecycle = ModelType(
+        ContainerLifeCycle, deserialize_from="lifecycle", serialize_when_none=False
+    )
     liveness_probe = ModelType(Probe, serialize_when_none=False)
     name = StringType(serialize_when_none=False)
     ports = ListType(ModelType(ContainerPort), serialize_when_none=False)
@@ -382,7 +409,9 @@ class PodSecurityContext(Model):
     seccomp_profile = ModelType(SeccompProfile, serialize_when_none=False)
     supplemental_groups = ListType(IntType(), serialize_when_none=False)
     sysctls = ListType(ModelType(Sysctl), serialize_when_none=False)
-    windows_options = ModelType(WindowsSecurityContextOptions, serialize_when_none=False)
+    windows_options = ModelType(
+        WindowsSecurityContextOptions, serialize_when_none=False
+    )
 
 
 class PodReadinessGate(Model):
@@ -562,7 +591,9 @@ class PersistentVolumeClaimTemplate(Model):
 
 
 class EphemeralVolumeSource(Model):
-    volume_claim_template = ModelType(PersistentVolumeClaimTemplate, serialize_when_none=False)
+    volume_claim_template = ModelType(
+        PersistentVolumeClaimTemplate, serialize_when_none=False
+    )
 
 
 class FlexVolumeSource(Model):
@@ -617,7 +648,9 @@ class VsphereVirtualDiskVolumeSource(Model):
 
 class Volume(Model):
     name = StringType(serialize_when_none=False)
-    aws_elastic_block_store = ModelType(AWSElasticBlockStoreVolumeSource, serialize_when_none=False)
+    aws_elastic_block_store = ModelType(
+        AWSElasticBlockStoreVolumeSource, serialize_when_none=False
+    )
     azure_disk = ModelType(AzureDiskVolumeSource, serialize_when_none=False)
     azure_file = ModelType(AzureFileVolumeSource, serialize_when_none=False)
     cephfs = ModelType(CephFSVolumeSource, serialize_when_none=False)
@@ -628,13 +661,19 @@ class Volume(Model):
     empty_dir = ModelType(EmptyDirVolumeSource, serialize_when_none=False)
     ephemeral = ModelType(EphemeralVolumeSource, serialize_when_none=False)
     flex_volume = ModelType(FlexVolumeSource, serialize_when_none=False)
-    gce_persistent_disk = ModelType(GCEPersistentDiskVolumeSource, serialize_when_none=False)
+    gce_persistent_disk = ModelType(
+        GCEPersistentDiskVolumeSource, serialize_when_none=False
+    )
     git_repo = ModelType(GitRepoVolumeSource, serialize_when_none=False)
     host_path = ModelType(HostPathVolumeSource, serialize_when_none=False)
     nfs = ModelType(NFSVolumeSource, serialize_when_none=False)
-    persistent_volume_claim = ModelType(PersistentVolumeClaimVolumeSource, serialize_when_none=False)
+    persistent_volume_claim = ModelType(
+        PersistentVolumeClaimVolumeSource, serialize_when_none=False
+    )
     secret = ModelType(SecretVolumeSource, serialize_when_none=False)
-    vsphere_volume = ModelType(VsphereVirtualDiskVolumeSource, serialize_when_none=False)
+    vsphere_volume = ModelType(
+        VsphereVirtualDiskVolumeSource, serialize_when_none=False
+    )
 
 
 class PodSpec(Model):
@@ -651,7 +690,9 @@ class PodSpec(Model):
     host_network = BooleanType(serialize_when_none=False)
     host_pid = BooleanType(serialize_when_none=False)
     hostname = StringType(serialize_when_none=False)
-    image_pull_secrets = ListType(ModelType(LocalObjectReference), serialize_when_none=False)
+    image_pull_secrets = ListType(
+        ModelType(LocalObjectReference), serialize_when_none=False
+    )
     init_containers = ListType(ModelType(Container), serialize_when_none=False)
     node_name = StringType(serialize_when_none=False)
     node_selector = ListType(ModelType(Labels), serialize_when_none=False)
@@ -682,7 +723,7 @@ class PodTemplateSpec(Model):
 class PortStatus(Model):
     error = StringType(serialize_when_none=False)
     port = StringType(serialize_when_none=False)
-    protocol = StringType(choices=('TCP', 'UDP', 'SCTP'), serialize_when_none=False)
+    protocol = StringType(choices=("TCP", "UDP", "SCTP"), serialize_when_none=False)
 
 
 class LoadBalancerIngress(Model):

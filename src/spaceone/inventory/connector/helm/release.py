@@ -2,17 +2,18 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['ApplicationConnector']
+__all_ = ["ApplicationConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class ReleaseConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def list_helm_labeled_secret(self, **query) -> list:
-        response = self.core_v1_client.list_secret_for_all_namespaces(label_selector="owner=helm")
+        response = self.core_v1_client.list_secret_for_all_namespaces(
+            label_selector="owner=helm"
+        )
         return response.items
 
     # Check kubernetes version to get ingress client
@@ -21,5 +22,5 @@ class ReleaseConnector(KubernetesConnector):
         Ingress api client is different from kubernetes version
         :return:
         """
-        version = ''
+        version = ""
         return version

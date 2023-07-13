@@ -2,12 +2,11 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['ConfigMapConnector']
+__all_ = ["ConfigMapConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class ConfigMapConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -21,5 +20,5 @@ class ConfigMapConnector(KubernetesConnector):
         Ingress api client is different from kubernetes version
         :return:
         """
-        version = ''
+        version = ""
         return version

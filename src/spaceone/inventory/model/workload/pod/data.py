@@ -1,5 +1,14 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
 from spaceone.inventory.libs.schema.base import ObjectMeta, PodSpec
 
 
@@ -56,12 +65,19 @@ class PodIP(Model):
 class PodStatus(Model):
     conditions = ListType(ModelType(PodCondition), serialize_when_none=False)
     container_statuses = ListType(ModelType(ContainerStatus), serialize_when_none=False)
-    ephemeral_container_statuses = ListType(ModelType(ContainerStatus), serialize_when_none=False)
-    init_container_statuses = ListType(ModelType(ContainerStatus), serialize_when_none=False)
+    ephemeral_container_statuses = ListType(
+        ModelType(ContainerStatus), serialize_when_none=False
+    )
+    init_container_statuses = ListType(
+        ModelType(ContainerStatus), serialize_when_none=False
+    )
     host_ip = StringType(serialize_when_none=False)
     message = StringType(serialize_when_none=False)
     nominated_node_name = StringType(serialize_when_none=False)
-    phase = StringType(choices=('Running', 'Succeeded', 'Pending', 'Failed', 'Unknown'), serialize_when_none=False)
+    phase = StringType(
+        choices=("Running", "Succeeded", "Pending", "Failed", "Unknown"),
+        serialize_when_none=False,
+    )
     pod_ip = StringType(serialize_when_none=False)
     pod_i_ps = ListType(ModelType(PodIP), serialize_when_none=False)
     qos_class = StringType(serialize_when_none=False)
@@ -81,7 +97,4 @@ class Pod(Model):
     containers = StringType(serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

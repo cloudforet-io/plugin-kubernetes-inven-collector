@@ -1,9 +1,32 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, Condition, AWSElasticBlockStoreVolumeSource\
-    , AzureDiskVolumeSource, SecretReference, ObjectReference, FCVolumeSource, GCEPersistentDiskVolumeSource, \
-    HostPathVolumeSource, NFSVolumeSource, NodeSelector, PhotonPersistentDiskVolumeSource, PortworxVolumeSource, \
-    QuobyteVolumeSource, RBDPersistentVolumeSource
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    LabelSelector,
+    Condition,
+    AWSElasticBlockStoreVolumeSource,
+    AzureDiskVolumeSource,
+    SecretReference,
+    ObjectReference,
+    FCVolumeSource,
+    GCEPersistentDiskVolumeSource,
+    HostPathVolumeSource,
+    NFSVolumeSource,
+    NodeSelector,
+    PhotonPersistentDiskVolumeSource,
+    PortworxVolumeSource,
+    QuobyteVolumeSource,
+    RBDPersistentVolumeSource,
+)
 
 
 class CinderPersistentVolumeSource(Model):
@@ -31,7 +54,9 @@ class AzureFilePersistentVolumeSource(Model):
 
 class CSIPersistentVolumeSource(Model):
     controller_expand_secret_ref = ModelType(SecretReference, serialize_when_none=False)
-    controller_publish_secret_ref = ModelType(SecretReference, serialize_when_none=False)
+    controller_publish_secret_ref = ModelType(
+        SecretReference, serialize_when_none=False
+    )
     driver = StringType(serialize_when_none=False)
     fs_type = StringType(serialize_when_none=False)
     node_publish_secret_ref = ModelType(SecretReference, serialize_when_none=False)
@@ -119,7 +144,9 @@ class PersistentVolumeSpec(Model):
     persistent_volume_reclaim_policy = StringType(serialize_when_none=False)
     storage_class_name = StringType(serialize_when_none=False)
     volume_mode = StringType(serialize_when_none=False)
-    aws_elastic_block_store = ModelType(AWSElasticBlockStoreVolumeSource, serialize_when_none=False)
+    aws_elastic_block_store = ModelType(
+        AWSElasticBlockStoreVolumeSource, serialize_when_none=False
+    )
     azure_disk = ModelType(AzureDiskVolumeSource, serialize_when_none=False)
     azure_file = ModelType(AzureFilePersistentVolumeSource, serialize_when_none=False)
     cephfs = ModelType(CephFSPersistentVolumeSource, serialize_when_none=False)
@@ -129,20 +156,26 @@ class PersistentVolumeSpec(Model):
     fc = ModelType(FCVolumeSource, serialize_when_none=False)
     flex_volume = ModelType(FlexPersistentVolumeSource, serialize_when_none=False)
     flocker = ModelType(FlockerVolumeSource, serialize_when_none=False)
-    gce_persistent_disk = ModelType(GCEPersistentDiskVolumeSource, serialize_when_none=False)
+    gce_persistent_disk = ModelType(
+        GCEPersistentDiskVolumeSource, serialize_when_none=False
+    )
     glusterfs = ModelType(GlusterfsPersistentVolumeSource, serialize_when_none=False)
     host_path = ModelType(HostPathVolumeSource, serialize_when_none=False)
     iscsi = ModelType(ISCSIPersistentVolumeSource, serialize_when_none=False)
     local = ModelType(LocalVolumeSource, serialize_when_none=False)
     nfs = ModelType(NFSVolumeSource, serialize_when_none=False)
     node_affinity = ModelType(VolumeNodeAffinity, serialize_when_none=False)
-    photon_persistent_disk = ModelType(PhotonPersistentDiskVolumeSource, serialize_when_none=False)
+    photon_persistent_disk = ModelType(
+        PhotonPersistentDiskVolumeSource, serialize_when_none=False
+    )
     portworx_volume = ModelType(PortworxVolumeSource, serialize_when_none=False)
     quobyte = ModelType(QuobyteVolumeSource, serialize_when_none=False)
     rbd = ModelType(RBDPersistentVolumeSource, serialize_when_none=False)
     scale_io = ModelType(ScaleIOPersistentVolumeSource, serialize_when_none=False)
     storageos = ModelType(StorageOSPersistentVolumeSource, serialize_when_none=False)
-    vsphere_volume = ModelType(VsphereVirtualDiskVolumeSource, serialize_when_none=False)
+    vsphere_volume = ModelType(
+        VsphereVirtualDiskVolumeSource, serialize_when_none=False
+    )
 
 
 class PersistentVolumeStatus(Model):
@@ -160,7 +193,4 @@ class PersistentVolume(Model):
     status = ModelType(PersistentVolumeStatus, serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}
