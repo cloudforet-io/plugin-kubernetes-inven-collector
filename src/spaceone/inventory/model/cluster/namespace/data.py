@@ -1,6 +1,19 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, PodTemplateSpec
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    LabelSelector,
+    PodTemplateSpec,
+)
 
 
 class NamespaceCondition(Model):
@@ -13,7 +26,7 @@ class NamespaceCondition(Model):
 
 class NamespaceStatus(Model):
     conditions = ListType(ModelType(NamespaceCondition), serialize_when_none=False)
-    phase = StringType(choices=('Active', 'Terminating'), serialize_when_none=False)
+    phase = StringType(choices=("Active", "Terminating"), serialize_when_none=False)
 
 
 class NamespaceSpec(Model):
@@ -29,7 +42,4 @@ class Namespace(Model):
     status = ModelType(NamespaceStatus, serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

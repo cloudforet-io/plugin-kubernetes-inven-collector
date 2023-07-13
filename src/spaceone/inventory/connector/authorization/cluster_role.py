@@ -2,12 +2,11 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['ClusterRoleConnector']
+__all_ = ["ClusterRoleConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class ClusterRoleConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -21,5 +20,5 @@ class ClusterRoleConnector(KubernetesConnector):
         Ingress api client is different from kubernetes version
         :return:
         """
-        version = ''
+        version = ""
         return version

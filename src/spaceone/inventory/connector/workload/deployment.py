@@ -2,12 +2,11 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['DeploymentConnector']
+__all_ = ["DeploymentConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class DeploymentConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

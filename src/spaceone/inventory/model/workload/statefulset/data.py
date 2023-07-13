@@ -1,7 +1,22 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, PodTemplateSpec
-from spaceone.inventory.model.storage.persistent_volume_claim.data import PersistentVolumeClaim
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    LabelSelector,
+    PodTemplateSpec,
+)
+from spaceone.inventory.model.storage.persistent_volume_claim.data import (
+    PersistentVolumeClaim,
+)
 from spaceone.inventory.model.workload.pod.data import Pod
 
 
@@ -16,13 +31,17 @@ class RollingUpdateStatefulSetStrategy(Model):
 
 
 class StatefulSetUpdateStrategy(Model):
-    rollingUpdate = ModelType(RollingUpdateStatefulSetStrategy, serialize_when_none=False)
+    rollingUpdate = ModelType(
+        RollingUpdateStatefulSetStrategy, serialize_when_none=False
+    )
     type = StringType(serialize_when_none=False)
 
 
 class StatefulSetSpec(Model):
     minReadySeconds = IntType(serialize_when_none=False)
-    persistentVolumeClaimRetentionPolicy = ModelType(StatefulSetPersistentVolumeClaimRetentionPolicy, serialize_when_none=False)
+    persistentVolumeClaimRetentionPolicy = ModelType(
+        StatefulSetPersistentVolumeClaimRetentionPolicy, serialize_when_none=False
+    )
     podManagementPolicy = StringType(serialize_when_none=False)
     replicas = IntType(serialize_when_none=False)
     revisionHistoryLimit = IntType(serialize_when_none=False)
@@ -30,7 +49,9 @@ class StatefulSetSpec(Model):
     serviceName = StringType(serialize_when_none=False)
     template = ModelType(PodTemplateSpec, serialize_when_none=False)
     updateStrategy = ModelType(StatefulSetUpdateStrategy, serialize_when_none=False)
-    volumeClaimTemplates = ListType(ModelType(PersistentVolumeClaim), serialize_when_none=False)
+    volumeClaimTemplates = ListType(
+        ModelType(PersistentVolumeClaim), serialize_when_none=False
+    )
 
 
 class StatefulSetCondition(Model):
@@ -65,7 +86,4 @@ class StatefulSet(Model):
     pods = ListType(ModelType(Pod), serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

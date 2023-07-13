@@ -2,17 +2,18 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['RoleConnector']
+__all_ = ["RoleConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class RoleConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def list_role(self, **query) -> list:
-        response = self.rbac_authorization_v1_client.list_role_for_all_namespaces(watch=False)
+        response = self.rbac_authorization_v1_client.list_role_for_all_namespaces(
+            watch=False
+        )
         return response.items
 
     # Check kubernetes version to get ingress client
@@ -21,5 +22,5 @@ class RoleConnector(KubernetesConnector):
         Ingress api client is different from kubernetes version
         :return:
         """
-        version = ''
+        version = ""
         return version

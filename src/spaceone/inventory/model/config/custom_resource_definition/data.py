@@ -1,6 +1,20 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, LocalObjectReference, ObjectReference
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    LabelSelector,
+    LocalObjectReference,
+    ObjectReference,
+)
 
 
 class ServiceReference(Model):
@@ -45,7 +59,9 @@ class CustomResourceColumnDefinition(Model):
 
 
 class CustomResourceDefinitionVersion(Model):
-    additionalPrinterColumns = ListType(ModelType(CustomResourceColumnDefinition), serialize_when_none=False)
+    additionalPrinterColumns = ListType(
+        ModelType(CustomResourceColumnDefinition), serialize_when_none=False
+    )
     deprecated = BooleanType(serialize_when_none=False)
     deprecationWarning = StringType(serialize_when_none=False)
     name = StringType(serialize_when_none=False)
@@ -61,11 +77,15 @@ class CustomResourceDefinitionNamesData(Model):
 class CustomResourceDefinitionSpec(Model):
     conversion = ModelType(CustomResourceConversion, serialize_when_none=False)
     group = StringType(serialize_when_none=False)
-    #names = ModelType(CustomResourceDefinitionNames, serialize_when_none=False)
-    names = ListType(ModelType(CustomResourceDefinitionNamesData), serialize_when_none=False)
+    # names = ModelType(CustomResourceDefinitionNames, serialize_when_none=False)
+    names = ListType(
+        ModelType(CustomResourceDefinitionNamesData), serialize_when_none=False
+    )
     preserveUnknownFields = BooleanType(serialize_when_none=False)
     scope = StringType(serialize_when_none=False)
-    versions = ListType(ModelType(CustomResourceDefinitionVersion), serialize_when_none=False)
+    versions = ListType(
+        ModelType(CustomResourceDefinitionVersion), serialize_when_none=False
+    )
 
 
 class CustomResourceDefinitionCondition(Model):
@@ -78,7 +98,9 @@ class CustomResourceDefinitionCondition(Model):
 
 class CustomResourceDefinitionStatus(Model):
     acceptedNames = ModelType(CustomResourceDefinitionNames, serialize_when_none=False)
-    conditions = ListType(ModelType(CustomResourceDefinitionCondition), serialize_when_none=False)
+    conditions = ListType(
+        ModelType(CustomResourceDefinitionCondition), serialize_when_none=False
+    )
     storedVersions = ListType(StringType(), serialize_when_none=False)
 
 
@@ -90,10 +112,9 @@ class CustomResourceDefinition(Model):
     spec = ModelType(CustomResourceDefinitionSpec, serialize_when_none=False)
     status = ModelType(CustomResourceDefinitionStatus, serialize_when_none=False)
     age = StringType(serialize_when_none=False)
-    additional_printer_columns = ListType(ModelType(CustomResourceColumnDefinition), serialize_when_none=False)
+    additional_printer_columns = ListType(
+        ModelType(CustomResourceColumnDefinition), serialize_when_none=False
+    )
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

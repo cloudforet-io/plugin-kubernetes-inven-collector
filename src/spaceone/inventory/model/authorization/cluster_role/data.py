@@ -1,5 +1,14 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
 from spaceone.inventory.libs.schema.base import ObjectMeta, PolicyRule, LabelSelector
 
 
@@ -16,7 +25,4 @@ class ClusterRole(Model):
     rules = ListType(ModelType(PolicyRule), serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}
