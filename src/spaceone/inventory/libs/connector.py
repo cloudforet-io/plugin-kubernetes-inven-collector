@@ -24,7 +24,7 @@ class KubernetesConnector(BaseConnector):
             - token_uri: ...
             - ...
         """
-        super().__init__(transaction=None, config=None)
+        super().__init__(**kwargs)
         secret_data = kwargs.get('secret_data')
 
         # Configure API Client
