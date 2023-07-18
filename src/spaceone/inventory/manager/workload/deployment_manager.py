@@ -1,8 +1,7 @@
 import logging
-from datetime import datetime, timezone
 
-from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.workload.deployment import DeploymentConnector
+from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.model.workload.deployment.cloud_service import (
     DeploymentResponse,
     DeploymentResource,
@@ -180,11 +179,19 @@ class DeploymentManager(KubernetesManager):
         pods_for_deployment = []
         for pod in list_pods:
             raw_pod = pod.to_dict()
+
+            if raw_pod.get("metadata").get("owner_references") is None:
+                continue
+
             pod_owner_reference = raw_pod.get("metadata", {}).get(
                 "owner_references", []
             )[0]
             for replicaset in list_replicasets:
                 raw_replicaset = replicaset.to_dict()
+
+                if raw_replicaset.get("metadata").get("owner_references") is None:
+                    continue
+
                 replicaset_owner_reference = raw_replicaset.get("metadata", {}).get(
                     "owner_references", []
                 )[0]
