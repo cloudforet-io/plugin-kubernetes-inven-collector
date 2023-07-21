@@ -1,7 +1,7 @@
 import logging
 
-from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.workload.daemonset import DaemonSetConnector
+from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.model.workload.daemonset.cloud_service import (
     DaemonSetResource,
     DaemonSetResponse,
@@ -163,6 +163,8 @@ class DaemonSetManager(KubernetesManager):
         pods_for_daemon_set = []
         for pod in list_pods:
             raw_pod = pod.to_dict()
+            if raw_pod.get("metadata").get("owner_references") is None:
+                continue
             pod_owner_reference = raw_pod.get("metadata", {}).get(
                 "owner_references", []
             )[0]

@@ -1,7 +1,7 @@
 import logging
 
-from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.workload.statefulset import StatefulSetConnector
+from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.model.workload.statefulset.cloud_service import (
     StatefulSetResource,
     StatefulSetResponse,
@@ -157,6 +157,9 @@ class StatefulSetManager(KubernetesManager):
         pods_for_stateful_set = []
         for pod in list_pods:
             raw_pod = pod.to_dict()
+            if raw_pod.get("metadata").get("owner_references") is None:
+                continue
+
             pod_owner_reference = raw_pod.get("metadata", {}).get(
                 "owner_references", []
             )[0]
