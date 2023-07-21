@@ -49,7 +49,7 @@ class CustomResourceDefinitionManager(KubernetesManager):
             self.connector_name, **params
         )
         list_all_crd = crd_conn.list_custom_resource_definition()
-        _LOGGER.debug(f"list_all_crd => {list_all_crd}")
+        # _LOGGER.debug(f"list_all_crd => {list_all_crd}")
 
         for crd in list_all_crd:
             try:
