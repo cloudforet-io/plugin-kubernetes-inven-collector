@@ -95,6 +95,7 @@ class Pod(Model):
     restarts = IntType(serialize_when_none=False)
     age = StringType(serialize_when_none=False)
     containers = StringType(serialize_when_none=False)
+    pod_logs = ModelType(ObjectMeta, serialize_when_none=False)
 
     def reference(self):
         return {"resource_id": self.uid, "external_link": f""}
