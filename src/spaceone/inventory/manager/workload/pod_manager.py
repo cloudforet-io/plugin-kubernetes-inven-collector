@@ -77,6 +77,7 @@ class PodManager(KubernetesManager):
                     raw_data.get("status", {}).get("container_statuses", []),
                     raw_data.get("spec", {}).get("containers", []),
                 )
+                raw_data["pod_logs"] = self._get_pod_logs(raw_data.get("metadata", {}))
 
                 labels = raw_data["metadata"]["labels"]
 
@@ -127,3 +128,12 @@ class PodManager(KubernetesManager):
         else:
             restarts = 0
         return restarts
+
+    @staticmethod
+    def _get_pod_logs(metadata):
+        pod_logs = {}
+        if metadata:
+            pod_logs["name"] = metadata.get("name", "")
+            pod_logs["namespace"] = metadata.get("namespace", "")
+
+        return pod_logs

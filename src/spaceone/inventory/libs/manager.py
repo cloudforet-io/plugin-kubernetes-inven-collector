@@ -329,6 +329,8 @@ class KubernetesManager(BaseManager):
 
     def get_config_data_keys(self, config_data):
         keys = ""
+        if config_data is None:
+            return keys
         for k in config_data.keys():
             keys = k + "," + keys
         return keys

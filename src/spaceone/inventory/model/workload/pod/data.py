@@ -85,6 +85,11 @@ class PodStatus(Model):
     start_time = DateTimeType(serialize_when_none=False)
 
 
+class PodLogs(Model):
+    name = StringType(serialize_when_none=False)
+    namespace = StringType(serialize_when_none=False)
+
+
 class Pod(Model):
     api_version = StringType(serialize_when_none=False)
     uid = StringType(serialize_when_none=False)
@@ -95,6 +100,7 @@ class Pod(Model):
     restarts = IntType(serialize_when_none=False)
     age = StringType(serialize_when_none=False)
     containers = StringType(serialize_when_none=False)
+    pod_logs = ModelType(PodLogs, serialize_when_none=False)
 
     def reference(self):
         return {"resource_id": self.uid, "external_link": f""}
