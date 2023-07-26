@@ -83,26 +83,18 @@ class CollectorService(BaseService):
             yield error_resource_response.to_primitive()
 
         # Execute manager
-        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKER) as executor:
-            future_executors = []
-            for execute_manager in self.execute_managers:
-                _manager = self.locator.get_manager(execute_manager)
-                future_executors.append(
-                    executor.submit(_manager.collect_resources, params)
+        for execute_manager in self.execute_managers:
+            try:
+                target_manager = self.locator.get_manager(execute_manager)
+                future_executor = target_manager.collect_resources(params)
+                for result in future_executor:
+                    yield result.to_primitive()
+            except Exception as e:
+                _LOGGER.error(f"[collect] failed to yield result => {e}", exc_info=True)
+                error_resource_response = self.generate_error_response(
+                    e, "", "inventory.Error"
                 )
-
-            for future in concurrent.futures.as_completed(future_executors):
-                try:
-                    for result in future.result():
-                        yield result.to_primitive()
-                except Exception as e:
-                    _LOGGER.error(
-                        f"[collect] failed to yield result => {e}", exc_info=True
-                    )
-                    error_resource_response = self.generate_error_response(
-                        e, "", "inventory.Error"
-                    )
-                    yield error_resource_response.to_primitive()
+                yield error_resource_response.to_primitive()
 
         _LOGGER.debug(f"TOTAL TIME : {time.time() - start_time} Seconds")
 
