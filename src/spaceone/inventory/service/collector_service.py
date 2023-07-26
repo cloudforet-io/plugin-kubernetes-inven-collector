@@ -83,13 +83,10 @@ class CollectorService(BaseService):
             yield error_resource_response.to_primitive()
 
         # Execute manager
-        future_executors = []
         for execute_manager in self.execute_managers:
-            _manager = self.locator.get_manager(execute_manager)
-            future_executors.append(_manager.collect_resources(params))
-
-        for future_executor in future_executors:
             try:
+                target_manager = self.locator.get_manager(execute_manager)
+                future_executor = target_manager.collect_resources(params)
                 for result in future_executor:
                     yield result.to_primitive()
             except Exception as e:
