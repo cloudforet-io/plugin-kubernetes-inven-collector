@@ -67,6 +67,8 @@ class CollectorService(BaseService):
         start_time = time.time()
 
         _LOGGER.debug(f"EXECUTOR START: Kubernetes Service")
+        options = params["options"]
+
         # Get target manager to collect
         try:
             self.execute_managers = self._get_target_execute_manager(
@@ -99,7 +101,9 @@ class CollectorService(BaseService):
         _LOGGER.debug(f"TOTAL TIME : {time.time() - start_time} Seconds")
 
     def _get_target_execute_manager(self, options):
-        if "cloud_service_types" in options:
+        if 'manager' in options:
+            execute_managers = [options['manager']]
+        elif "cloud_service_types" in options:
             execute_managers = self._cloud_service_groups_to_types(
                 options["cloud_service_types"]
             )

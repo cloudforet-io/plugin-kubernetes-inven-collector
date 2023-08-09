@@ -43,6 +43,12 @@ def _get_credentials():
 
 
 class TestCollector(TestCase):
+
+    def test_get_tasks(self):
+        print(f"=================== start get_tasks! ==========================")
+        v_info = self.inventory.Job.get_tasks({"options": {}, "secret_data": {}})
+        print_json(v_info)
+
     def test_init(self):
         print(f"=================== start test init! ==========================")
         v_info = self.inventory.Collector.init({"options": {}})
