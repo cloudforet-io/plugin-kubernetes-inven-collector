@@ -72,7 +72,7 @@ class CollectorService(BaseService):
         # Get target manager to collect
         try:
             self.execute_managers = self._get_target_execute_manager(
-                params.get("options", {})
+                params.get("options", {}), params.get('task_options', {})
             )
             _LOGGER.debug(f"[collect] execute_managers => {self.execute_managers}")
         except Exception as e:
@@ -100,17 +100,13 @@ class CollectorService(BaseService):
 
         _LOGGER.debug(f"TOTAL TIME : {time.time() - start_time} Seconds")
 
-    def _get_target_execute_manager(self, options):
-        if 'manager' in options:
-            execute_managers = [options['manager']]
+    def _get_target_execute_manager(self, options, task_options):
+        if task_options and 'manager' in task_options:
+            execute_managers = [task_options['manager']]
         elif "cloud_service_types" in options:
-            execute_managers = self._cloud_service_groups_to_types(
-                options["cloud_service_types"]
-            )
+            execute_managers = self._cloud_service_groups_to_types(options["cloud_service_types"])
         else:
-            execute_managers = self._cloud_service_groups_to_types(
-                CLOUD_SERVICE_GROUP_MAP.keys()
-            )
+            execute_managers = self._cloud_service_groups_to_types(CLOUD_SERVICE_GROUP_MAP.keys())
 
         return execute_managers
 
