@@ -14,23 +14,39 @@ CLOUD_SERVICE_GROUP_MAP = {
         "DeploymentManager",
         "DaemonSetManager",
         "StatefulSetManager",
+        "JobManager",
     ],
-    "Cluster": ["ClusterManager", "NodeManager", "NamespaceManager"],
-    "Service": ["ServiceManager", "IngressManager", "NetworkPolicyManager"],
+    "Cluster": [
+        "ClusterManager",
+        "NodeManager",
+        "NamespaceManager",
+    ],
+    "Service": [
+        "ServiceManager",
+        "IngressManager",
+        "NetworkPolicyManager",
+    ],
     "Storage": [
         "StorageClassManager",
         "PersistentVolumeClaimManager",
         "PersistentVolumeManager",
     ],
-    "Authentication": ["ServiceAccountManager"],
-    "Authorization": ["RoleManager", "ClusterRoleManager"],
+    "Authentication": [
+        "ServiceAccountManager",
+    ],
+    "Authorization": [
+        "RoleManager",
+        "ClusterRoleManager",
+    ],
     "Config": [
         "ConfigMapManager",
         "SecretManager",
         "CertificateSigningRequestManager",
         "CustomResourceDefinitionManager",
     ],
-    "Helm": ["ReleaseManager"],
+    "Helm": [
+        "ReleaseManager",
+    ],
 }
 
 ASSET_URL = "https://spaceone-custom-assets.s3.ap-northeast-2.amazonaws.com/console-assets/icons/cloud-services/kubernetes"

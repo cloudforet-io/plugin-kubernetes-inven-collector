@@ -10,7 +10,6 @@ TOKEN = os.environ.get("TOKEN", None)
 SERVER = os.environ.get("SERVER", None)
 CERTIFICATE_AUTHORITY_DATA = os.environ.get("CERTIFICATE_AUTHORITY_DATA", None)
 
-
 if (
     CLUSTER_NAME is None
     or TOKEN is None
@@ -43,19 +42,18 @@ def _get_credentials():
 
 
 class TestCollector(TestCase):
-
     def test_get_tasks(self):
-        print(f"=================== start get_tasks! ==========================")
+        print("=================== start get_tasks! ==========================")
         v_info = self.inventory.Job.get_tasks({"options": {}, "secret_data": {}})
         print_json(v_info)
 
     def test_init(self):
-        print(f"=================== start test init! ==========================")
+        print("=================== start test init! ==========================")
         v_info = self.inventory.Collector.init({"options": {}})
         print_json(v_info)
 
     def test_verify(self):
-        print(f"=================== start test verify! ==========================")
+        print("=================== start test verify! ==========================")
         options = {}
         v_info = self.inventory.Collector.verify(
             {"options": options, "secret_data": {}}
@@ -68,10 +66,8 @@ class TestCollector(TestCase):
         options = {"cloud_service_types": ["WorkLoad"]}
             }
         """
-        print(
-            f"======================= start test collect! ==========================="
-        )
-        options = {"cloud_service_types": ["Cluster"]}
+        print("======================= start test collect! ===========================")
+        options = {"cloud_service_types": ["WorkLoad"]}
         # options = {}
         filter = {}
         secret_data = {
