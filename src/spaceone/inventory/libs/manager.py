@@ -19,20 +19,23 @@ class KubernetesManager(BaseManager):
     collected_region_codes = []
 
     def verify(self, options, secret_data, **kwargs):
-        """ Check collector's status.
-        """
+        """Check collector's status."""
         connector: KubernetesConnector = KubernetesConnector(secret_data=secret_data)
         connector.verify()
 
     def collect_cloud_service_type(self, params):
-        options = params.get('options', {})
+        options = params.get("options", {})
 
         for cloud_service_type in self.cloud_service_types:
-            if 'service_code_mappers' in options:
-                svc_code_maps = options['service_code_mappers']
-                if getattr(cloud_service_type.resource, 'service_code') and \
-                        cloud_service_type.resource.service_code in svc_code_maps:
-                    cloud_service_type.resource.service_code = svc_code_maps[cloud_service_type.resource.service_code]
+            if "service_code_mappers" in options:
+                svc_code_maps = options["service_code_mappers"]
+                if (
+                    getattr(cloud_service_type.resource, "service_code")
+                    and cloud_service_type.resource.service_code in svc_code_maps
+                ):
+                    cloud_service_type.resource.service_code = svc_code_maps[
+                        cloud_service_type.resource.service_code
+                    ]
             yield cloud_service_type
 
     def collect_cloud_service(self, params) -> list:
@@ -54,9 +57,12 @@ class KubernetesManager(BaseManager):
             total_resources.extend(self.collect_region())
 
         except Exception as e:
-            _LOGGER.error(f'[collect_resources] {e}', exc_info=True)
-            error_resource_response = self.generate_error_response(e, self.cloud_service_types[0].resource.group,
-                                                                   self.cloud_service_types[0].resource.name)
+            _LOGGER.error(f"[collect_resources] {e}", exc_info=True)
+            error_resource_response = self.generate_error_response(
+                e,
+                self.cloud_service_types[0].resource.group,
+                self.cloud_service_types[0].resource.name,
+            )
             total_resources.append(error_resource_response)
 
         return total_resources
@@ -65,13 +71,13 @@ class KubernetesManager(BaseManager):
         results = []
         for region_code in self.collected_region_codes:
             if region := self.match_region_info(region_code):
-                results.append(RegionResponse({'resource': region}))
+                results.append(RegionResponse({"resource": region}))
 
         return results
 
     def set_region_code(self, region):
         if region not in REGION_INFO:
-            region = 'global'
+            region = "global"
 
         if region not in self.collected_region_codes:
             self.collected_region_codes.append(region)
@@ -81,8 +87,8 @@ class KubernetesManager(BaseManager):
         if len(list_node) > 0:
             node = list_node[0]
             raw_node = node.to_dict()
-            provider_id = raw_node.get('spec', {}).get('provider_id', '')
-            if provider_id is None or provider_id == '':
+            provider_id = raw_node.get("spec", {}).get("provider_id", "")
+            if provider_id is None or provider_id == "":
                 kubernetes_provider = self.get_provider_from_node(raw_node)
             else:
                 kubernetes_provider = self.get_provider_from_provider_id(provider_id)
@@ -106,7 +112,7 @@ class KubernetesManager(BaseManager):
     def get_memory_total_per_node(node):
         # "memory": "1003292Ki"
         raw_node = node.to_dict()
-        memory = raw_node.get('status', {}).get('allocatable', {}).get('memory', '0Ki')
+        memory = raw_node.get("status", {}).get("allocatable", {}).get("memory", "0Ki")
 
         return memory
 
@@ -114,7 +120,7 @@ class KubernetesManager(BaseManager):
     def get_cpu_total_per_node(node):
         # "cpu": "940m"
         raw_node = node.to_dict()
-        cpu = raw_node.get('status', {}).get('allocatable', {}).get('cpu', '0m')
+        cpu = raw_node.get("status", {}).get("allocatable", {}).get("cpu", "0m")
 
         return cpu
 
@@ -122,26 +128,30 @@ class KubernetesManager(BaseManager):
     def get_pod_count_total_per_node(node):
         # "pods": "110"
         raw_node = node.to_dict()
-        pod_count = raw_node.get('status', {}).get('allocatable', {}).get('pod', 0)
+        pod_count = raw_node.get("status", {}).get("allocatable", {}).get("pod", 0)
 
         return pod_count
 
     @staticmethod
     def get_cpu_current_per_node(node, list_pod):
-        '''
+        """
         get cpu current usage from resources.requests.cpus in each containers
-        '''
+        """
         cpu_current = ""
-        node_name = node.to_dict().get('metadata', {}).get('name', '')
+        node_name = node.to_dict().get("metadata", {}).get("name", "")
         for pod in list_pod:
             pod_raw = pod.to_dict()
-            if node_name == pod_raw.get('spec', {}).get('node_name', ''):
-                list_container = pod_raw.get('spec', {}).get('containers', '')
+            if node_name == pod_raw.get("spec", {}).get("node_name", ""):
+                list_container = pod_raw.get("spec", {}).get("containers", "")
                 for container in list_container:
-                    log = container.get('resources', {})
-                    _LOGGER.debug(f'requests => {log}')
-                    cpu = container.get('resources', {}).get('requests', {}).get('cpu', '0m')
-                    cpu_current = cpu_current + int(cpu.replace('m', ''))
+                    log = container.get("resources", {})
+                    _LOGGER.debug(f"requests => {log}")
+                    cpu = (
+                        container.get("resources", {})
+                        .get("requests", {})
+                        .get("cpu", "0m")
+                    )
+                    cpu_current = cpu_current + int(cpu.replace("m", ""))
 
         return cpu_current
 
@@ -150,49 +160,60 @@ class KubernetesManager(BaseManager):
         convert_labels = []
         if labels is not None:
             for k, v in labels.items():
-                convert_labels.append({
-                    'key': k,
-                    'value': v
-                })
+                convert_labels.append({"key": k, "value": v})
         return convert_labels
 
     @staticmethod
     def generate_error_response(e, cloud_service_group, cloud_service_type):
         if type(e) is dict:
-            error_resource_response = ErrorResourceResponse({
-                'message': json.dumps(e),
-                'resource': {
-                    'cloud_service_group': cloud_service_group,
-                    'cloud_service_type': cloud_service_type
-                }})
+            error_resource_response = ErrorResourceResponse(
+                {
+                    "message": json.dumps(e),
+                    "resource": {
+                        "cloud_service_group": cloud_service_group,
+                        "cloud_service_type": cloud_service_type,
+                    },
+                }
+            )
         else:
-            error_resource_response = ErrorResourceResponse({
-                'message': str(e),
-                'resource': {
-                    'cloud_service_group': cloud_service_group,
-                    'cloud_service_type': cloud_service_type
-                }})
+            error_resource_response = ErrorResourceResponse(
+                {
+                    "message": str(e),
+                    "resource": {
+                        "cloud_service_group": cloud_service_group,
+                        "cloud_service_type": cloud_service_type,
+                    },
+                }
+            )
 
         return error_resource_response
 
     @staticmethod
-    def generate_resource_error_response(e, cloud_service_group, cloud_service_type, resource_id):
+    def generate_resource_error_response(
+        e, cloud_service_group, cloud_service_type, resource_id
+    ):
         if type(e) is dict:
-            error_resource_response = ErrorResourceResponse({
-                'message': json.dumps(e),
-                'resource': {
-                    'cloud_service_group': cloud_service_group,
-                    'cloud_service_type': cloud_service_type,
-                    'resource_id': resource_id
-                }})
+            error_resource_response = ErrorResourceResponse(
+                {
+                    "message": json.dumps(e),
+                    "resource": {
+                        "cloud_service_group": cloud_service_group,
+                        "cloud_service_type": cloud_service_type,
+                        "resource_id": resource_id,
+                    },
+                }
+            )
         else:
-            error_resource_response = ErrorResourceResponse({
-                'message': str(e),
-                'resource': {
-                    'cloud_service_group': cloud_service_group,
-                    'cloud_service_type': cloud_service_type,
-                    'resource_id': resource_id
-                }})
+            error_resource_response = ErrorResourceResponse(
+                {
+                    "message": str(e),
+                    "resource": {
+                        "cloud_service_group": cloud_service_group,
+                        "cloud_service_type": cloud_service_type,
+                        "resource_id": resource_id,
+                    },
+                }
+            )
         return error_resource_response
 
     @staticmethod
@@ -201,9 +222,7 @@ class KubernetesManager(BaseManager):
 
         if match_region_info:
             region_info = match_region_info.copy()
-            region_info.update({
-                'region_code': region_code
-            })
+            region_info.update({"region_code": region_code})
             return RegionResource(region_info, strict=False)
 
         return None
@@ -215,36 +234,40 @@ class KubernetesManager(BaseManager):
         :param secret_data:
         :return:
         """
-        cluster_name = secret_data.get('cluster_name', '')
-        current_context = secret_data.get('current-context', '')
-        list_contexts = secret_data.get('contexts', [])
+        cluster_name = secret_data.get("cluster_name", "")
+        current_context = secret_data.get("current-context", "")
+        list_contexts = secret_data.get("contexts", [])
 
         for context in list_contexts:
-            if current_context == context.get('name', ''):
-                cluster_name = context.get('context', {}).get('cluster', '')
+            if current_context == context.get("name", ""):
+                cluster_name = context.get("context", {}).get("cluster", "")
 
         return cluster_name
 
     @staticmethod
     def get_provider_from_node(raw_node):
-        kubelet_version = raw_node.get('status', {}).get('node_info', {}).get('kubelet_version', '')
-        if len(kubelet_version.split('-')) >= 2:
-            if kubelet_version.split('-')[1].startswith('gke'):
-                return 'gke'
-            elif kubelet_version.split('-')[1].startswith('eks'):
-                return 'eks'
+        kubelet_version = (
+            raw_node.get("status", {}).get("node_info", {}).get("kubelet_version", "")
+        )
+        if len(kubelet_version.split("-")) >= 2:
+            if kubelet_version.split("-")[1].startswith("gke"):
+                return "gke"
+            elif kubelet_version.split("-")[1].startswith("eks"):
+                return "eks"
             else:
-                return 'unknown'
+                return "unknown"
         else:
-            return 'unknown'
+            return "unknown"
 
     @staticmethod
     def get_version_from_node(raw_node):
-        kubelet_version = raw_node.get('status', {}).get('node_info', {}).get('kubelet_version', '')
-        if len(kubelet_version.split('-')) >= 1:
-            return kubelet_version.split('-')[0]
+        kubelet_version = (
+            raw_node.get("status", {}).get("node_info", {}).get("kubelet_version", "")
+        )
+        if len(kubelet_version.split("-")) >= 1:
+            return kubelet_version.split("-")[0]
         else:
-            return 'unknown'
+            return "unknown"
 
     @staticmethod
     def get_provider_from_provider_id(provider_id):
@@ -253,14 +276,14 @@ class KubernetesManager(BaseManager):
         :param provider_id:
         :return:
         """
-        _LOGGER.debug(f'get_provider_from_provider_id => {provider_id}')
-        cloud_provider = provider_id.split(':')[0]
-        if cloud_provider == 'aws':
-            return 'eks'
-        elif cloud_provider == 'gce':
-            return 'gke'
+        _LOGGER.debug(f"get_provider_from_provider_id => {provider_id}")
+        cloud_provider = provider_id.split(":")[0]
+        if cloud_provider == "aws":
+            return "eks"
+        elif cloud_provider == "gce":
+            return "gke"
         else:
-            return 'unknown'
+            return "unknown"
 
     def get_age(self, creation_timestamp):
         if creation_timestamp is None:
@@ -278,26 +301,36 @@ class KubernetesManager(BaseManager):
 
         ready_container_count = 0
         for i in status_container_statuses:
-            if i['ready'] == True:
+            if i["ready"] == True:
                 ready_container_count = ready_container_count + 1
-        containers = str(ready_container_count)+'/'+str(len(spec_containers))
+        containers = str(ready_container_count) + "/" + str(len(spec_containers))
         return containers
 
     def _convert_pod_data(self, pod):
         raw_pod = pod.to_dict()
-        raw_pod['metadata']['annotations'] = self.convert_labels_format(
-            raw_pod.get('metadata', {}).get('annotations', {}))
-        raw_pod['metadata']['labels'] = self.convert_labels_format(raw_pod.get('metadata', {}).get('labels', {}))
-        raw_pod['spec']['node_selector'] = self.convert_labels_format(
-            raw_pod.get('spec', {}).get('node_selector', {}))
-        raw_pod['uid'] = raw_pod['metadata']['uid']
-        raw_pod['age'] = self.get_age(raw_pod.get('metadata', {}).get('creation_timestamp', ''))
-        raw_pod['containers'] = self.get_containers(raw_pod.get('status', {}).get('container_statuses', []),
-                                                    raw_pod.get('spec', {}).get('containers', []))
+        raw_pod["metadata"]["annotations"] = self.convert_labels_format(
+            raw_pod.get("metadata", {}).get("annotations", {})
+        )
+        raw_pod["metadata"]["labels"] = self.convert_labels_format(
+            raw_pod.get("metadata", {}).get("labels", {})
+        )
+        raw_pod["spec"]["node_selector"] = self.convert_labels_format(
+            raw_pod.get("spec", {}).get("node_selector", {})
+        )
+        raw_pod["uid"] = raw_pod["metadata"]["uid"]
+        raw_pod["age"] = self.get_age(
+            raw_pod.get("metadata", {}).get("creation_timestamp", "")
+        )
+        raw_pod["containers"] = self.get_containers(
+            raw_pod.get("status", {}).get("container_statuses", []),
+            raw_pod.get("spec", {}).get("containers", []),
+        )
         return raw_pod
 
     def get_config_data_keys(self, config_data):
-        keys = ''
+        keys = ""
+        if config_data is None:
+            return keys
         for k in config_data.keys():
-            keys = k + ',' + keys
+            keys = k + "," + keys
         return keys

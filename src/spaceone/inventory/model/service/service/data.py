@@ -1,6 +1,20 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, Labels, LoadBalancerStatus, Condition
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    Labels,
+    LoadBalancerStatus,
+    Condition,
+)
 
 
 class ClientIPConfig(Model):
@@ -16,7 +30,7 @@ class ServicePort(Model):
     name = StringType(serialize_when_none=False)
     node_port = IntType(serialize_when_none=False)
     port = IntType(serialize_when_none=False)
-    protocol = StringType(choices=('TCP', 'UDP', 'SCTP'), serialize_when_none=False)
+    protocol = StringType(choices=("TCP", "UDP", "SCTP"), serialize_when_none=False)
     target_port = StringType(serialize_when_none=False)
 
 
@@ -38,9 +52,13 @@ class ServiceSpec(Model):
     publish_not_ready_addresses = BooleanType(serialize_when_none=False)
     selector = ListType(ModelType(Labels), serialize_when_none=False)
     session_affinity = StringType(serialize_when_none=False)
-    session_affinity_config = ModelType(SessionAffinityConfig, serialize_when_none=False)
-    type = StringType(choices=('ExternalName', 'ClusterIP', 'NodePort', 'LoadBalancer'), serialize_when_none=False)
-
+    session_affinity_config = ModelType(
+        SessionAffinityConfig, serialize_when_none=False
+    )
+    type = StringType(
+        choices=("ExternalName", "ClusterIP", "NodePort", "LoadBalancer"),
+        serialize_when_none=False,
+    )
 
 
 class ServiceStatus(Model):
@@ -57,7 +75,4 @@ class Service(Model):
     status = ModelType(ServiceStatus, serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

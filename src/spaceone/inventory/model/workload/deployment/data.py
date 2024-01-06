@@ -1,6 +1,20 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, PodSpec, LabelSelector, PodTemplateSpec
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    PodSpec,
+    LabelSelector,
+    PodTemplateSpec,
+)
 from spaceone.inventory.model.workload.pod.data import Pod
 
 
@@ -57,7 +71,4 @@ class Deployment(Model):
     pods = ListType(ModelType(Pod), serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

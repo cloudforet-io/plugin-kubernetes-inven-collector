@@ -2,7 +2,10 @@ import logging
 
 from spaceone.inventory.libs.manager import KubernetesManager
 from spaceone.inventory.connector.cluster.node import NodeConnector
-from spaceone.inventory.model.cluster.node.cloud_service import NodeResponse, NodeResource
+from spaceone.inventory.model.cluster.node.cloud_service import (
+    NodeResponse,
+    NodeResource,
+)
 from spaceone.inventory.model.cluster.node.cloud_service_type import CLOUD_SERVICE_TYPES
 from spaceone.inventory.model.cluster.node.data import Node
 
@@ -10,11 +13,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class NodeManager(KubernetesManager):
-    connector_name = 'NodeConnector'
+    connector_name = "NodeConnector"
     cloud_service_types = CLOUD_SERVICE_TYPES
 
     def collect_cloud_service(self, params):
-        _LOGGER.debug(f'** Node Start **')
+        _LOGGER.debug(f"** Node Start **")
         """
         Args:
             params:
@@ -29,28 +32,30 @@ class NodeManager(KubernetesManager):
         collected_cloud_services = []
         error_responses = []
 
-        secret_data = params['secret_data']
-        pod_name = ''
+        secret_data = params["secret_data"]
+        pod_name = ""
 
         ##################################
         # 0. Gather All Related Resources
         # List all information through connector
         ##################################
-        node_conn: NodeConnector = self.locator.get_connector(self.connector_name, **params)
+        node_conn: NodeConnector = self.locator.get_connector(
+            self.connector_name, **params
+        )
         list_all_node = node_conn.list_node()
-        #_LOGGER.debug(f'list_all_deployment => {list_all_deployment}')
+        # _LOGGER.debug(f'list_all_deployment => {list_all_deployment}')
 
         for node in list_all_node:
             try:
-                #_LOGGER.debug(f'deployment => {deployment.to_dict()}')
+                # _LOGGER.debug(f'deployment => {deployment.to_dict()}')
                 ##################################
                 # 1. Set Basic Information
                 ##################################
                 node_name = node.metadata.name
                 cluster_name = self.get_cluster_name(secret_data)
-                region = 'global'
+                region = "global"
 
-                #_LOGGER.debug(f'node => {node}')
+                # _LOGGER.debug(f'node => {node}')
                 ##################################
                 # 2. Make Base Data
                 ##################################
@@ -58,31 +63,35 @@ class NodeManager(KubernetesManager):
                 # Convert object to dict
                 raw_data = node.to_dict()
                 raw_readonly = node.to_dict()
-                raw_data['metadata']['annotations'] = self.convert_labels_format(
-                    raw_readonly.get('metadata', {}).get('annotations', {}))
-                raw_data['metadata']['labels'] = self.convert_labels_format(
-                    raw_readonly.get('metadata', {}).get('labels', {}))
-                raw_data['uid'] = raw_readonly['metadata']['uid']
+                raw_data["metadata"]["annotations"] = self.convert_labels_format(
+                    raw_readonly.get("metadata", {}).get("annotations", {})
+                )
+                raw_data["metadata"]["labels"] = self.convert_labels_format(
+                    raw_readonly.get("metadata", {}).get("labels", {})
+                )
+                raw_data["uid"] = raw_readonly["metadata"]["uid"]
 
-                labels = raw_data['metadata']['labels']
+                labels = raw_data["metadata"]["labels"]
 
                 # To get display data
                 raw_data = self._get_display_data(raw_data)
 
                 node_data = Node(raw_data, strict=False)
-                _LOGGER.debug(f'node_data => {node_data.to_primitive()}')
+                _LOGGER.debug(f"node_data => {node_data.to_primitive()}")
 
                 ##################################
                 # 3. Make Return Resource
                 ##################################
-                node_resource = NodeResource({
-                    'name': node_name,
-                    'account': cluster_name,
-                    'tags': labels,
-                    'region_code': region,
-                    'data': node_data,
-                    'reference': node_data.reference()
-                })
+                node_resource = NodeResource(
+                    {
+                        "name": node_name,
+                        "account": cluster_name,
+                        "tags": labels,
+                        "region_code": region,
+                        "data": node_data,
+                        "reference": node_data.reference(),
+                    }
+                )
 
                 ##################################
                 # 4. Make Collected Region Code
@@ -93,28 +102,32 @@ class NodeManager(KubernetesManager):
                 # 5. Make Resource Response Object
                 # List of InstanceResponse Object
                 ##################################
-                collected_cloud_services.append(NodeResponse({'resource': node_resource}))
+                collected_cloud_services.append(
+                    NodeResponse({"resource": node_resource})
+                )
 
             except Exception as e:
-                _LOGGER.error(f'[collect_cloud_service] => {e}', exc_info=True)
+                _LOGGER.error(f"[collect_cloud_service] => {e}", exc_info=True)
                 # Pod name is key
-                error_response = self.generate_resource_error_response(e, 'WorkLoad', 'Node', pod_name)
+                error_response = self.generate_resource_error_response(
+                    e, "WorkLoad", "Node", pod_name
+                )
                 error_responses.append(error_response)
 
         return collected_cloud_services, error_responses
 
     def _get_display_data(self, raw_node):
-        raw_node['display'] = {
-            'status': self._get_node_status(raw_node)
-        }
+        raw_node["display"] = {"status": self._get_node_status(raw_node)}
 
         return raw_node
 
     @staticmethod
     def _get_node_status(raw_node):
-        node_conditions = raw_node.get('status', {}).get('conditions', [])
+        node_conditions = raw_node.get("status", {}).get("conditions", [])
         for node_condition in node_conditions:
-            if node_condition.get('type', '') == "Ready":
-                return 'Ready' if node_condition.get('status', "False") == 'True' else 'NotReady'
-
-
+            if node_condition.get("type", "") == "Ready":
+                return (
+                    "Ready"
+                    if node_condition.get("status", "False") == "True"
+                    else "NotReady"
+                )

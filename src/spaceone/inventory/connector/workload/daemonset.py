@@ -2,12 +2,11 @@ import logging
 
 from spaceone.inventory.libs.connector import KubernetesConnector
 
-__all_ = ['DaemonSetConnector']
+__all_ = ["DaemonSetConnector"]
 _LOGGER = logging.getLogger(__name__)
 
 
 class DaemonSetConnector(KubernetesConnector):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

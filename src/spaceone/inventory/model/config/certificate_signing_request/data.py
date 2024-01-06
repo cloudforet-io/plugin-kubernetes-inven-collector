@@ -1,6 +1,20 @@
 from schematics import Model
-from schematics.types import ModelType, ListType, StringType, FloatType, DateTimeType, IntType, BooleanType, DictType
-from spaceone.inventory.libs.schema.base import ObjectMeta, LabelSelector, LocalObjectReference, ObjectReference
+from schematics.types import (
+    ModelType,
+    ListType,
+    StringType,
+    FloatType,
+    DateTimeType,
+    IntType,
+    BooleanType,
+    DictType,
+)
+from spaceone.inventory.libs.schema.base import (
+    ObjectMeta,
+    LabelSelector,
+    LocalObjectReference,
+    ObjectReference,
+)
 
 
 class CertificateSigningRequestCondition(Model):
@@ -14,7 +28,9 @@ class CertificateSigningRequestCondition(Model):
 
 class CertificateSigningRequestStatus(Model):
     certificate = StringType(serialize_when_none=False)
-    conditions = ListType(ModelType(CertificateSigningRequestCondition), serialize_when_none=False)
+    conditions = ListType(
+        ModelType(CertificateSigningRequestCondition), serialize_when_none=False
+    )
 
 
 class CertificateSigningRequestSpec(Model):
@@ -37,7 +53,4 @@ class CertificateSigningRequest(Model):
     status = ModelType(CertificateSigningRequestStatus, serialize_when_none=False)
 
     def reference(self):
-        return {
-            "resource_id": self.uid,
-            "external_link": f""
-        }
+        return {"resource_id": self.uid, "external_link": f""}

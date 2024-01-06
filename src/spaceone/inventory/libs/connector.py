@@ -5,12 +5,11 @@ from kubernetes import client
 from spaceone.core.connector import BaseConnector
 from kubernetes.config.kube_config import KubeConfigLoader
 
-DEFAULT_SCHEMA = 'google_oauth_client_id'
+DEFAULT_SCHEMA = "google_oauth_client_id"
 _LOGGER = logging.getLogger(__name__)
 
 
 class KubernetesConnector(BaseConnector):
-
     def __init__(self, **kwargs):
         """
         kwargs
@@ -24,14 +23,12 @@ class KubernetesConnector(BaseConnector):
             - token_uri: ...
             - ...
         """
-        super().__init__(transaction=None, config=None)
-        secret_data = kwargs.get('secret_data')
+        super().__init__(**kwargs)
+        secret_data = kwargs.get("secret_data")
 
         # Configure API Client
         kube_config = self._get_kube_config(secret_data)
-        loader = KubeConfigLoader(
-            config_dict=kube_config
-        )
+        loader = KubeConfigLoader(config_dict=kube_config)
 
         configuration = client.Configuration()
         configuration.retries = 3
@@ -57,39 +54,39 @@ class KubernetesConnector(BaseConnector):
     def _get_kube_config(secret_data):
         """
         Returns kube-config style object from secret_data
-        
-        :param secret_data: 
-        :return: kube_config  
+
+        :param secret_data:
+        :return: kube_config
         """
         return {
             "apiVersion": "v1",
             "clusters": [
                 {
                     "cluster": {
-                        "certificate-authority-data": secret_data.get('certificate_authority_data', ''),
-                        "server": secret_data.get('server', '')
+                        "certificate-authority-data": secret_data.get(
+                            "certificate_authority_data", ""
+                        ),
+                        "server": secret_data.get("server", ""),
                     },
-                    "name": secret_data.get('cluster_name', '')
+                    "name": secret_data.get("cluster_name", ""),
                 }
             ],
             "contexts": [
                 {
                     "context": {
-                        "cluster": secret_data.get('cluster_name', ''),
-                        "user": secret_data.get('cluster_name', '')
+                        "cluster": secret_data.get("cluster_name", ""),
+                        "user": secret_data.get("cluster_name", ""),
                     },
-                    "name": secret_data.get('cluster_name', '')
+                    "name": secret_data.get("cluster_name", ""),
                 }
             ],
-            "current-context": secret_data.get('cluster_name', ''),
+            "current-context": secret_data.get("cluster_name", ""),
             "kind": "Config",
             "preferences": {},
             "users": [
                 {
-                    "name": secret_data.get('cluster_name', ''),
-                    "user": {
-                        "token": secret_data.get('token', '')
-                    }
+                    "name": secret_data.get("cluster_name", ""),
+                    "user": {"token": secret_data.get("token", "")},
                 }
-            ]
+            ],
         }
