@@ -16,32 +16,28 @@
 
 from setuptools import setup, find_packages
 
-with open('VERSION', 'r') as f:
+with open("VERSION", "r") as f:
     VERSION = f.read().strip()
     f.close()
 
 setup(
-    name='plugin-kubernetes-inventory-collector',
+    name="plugin-kubernetes-inventory-collector",
     version=VERSION,
-    description='Kubernetes inventory collector',
-    long_description='',
-    url='https://www.cloudforet.io/',
-    author='MEGAZONE SpaceONE Team',
-    author_email='admin@spaceone.dev',
-    license='Apache License 2.0',
+    description="Kubernetes inventory collector",
+    long_description="",
+    url="https://www.cloudforet.io/",
+    author="MEGAZONE SpaceONE Team",
+    author_email="admin@spaceone.dev",
+    license="Apache License 2.0",
     packages=find_packages(),
     install_requires=[
-        'spaceone-core',
-        'spaceone-api',
-        'spaceone-tester',
-        'schematics',
-        'MarkupSafe>=2.0.0rc2',
-        'requests',
-        'beautifulsoup4',
-        'kubernetes'
+        "spaceone-api",
+        "schematics",
+        "MarkupSafe>=2.0.0rc2",
+        "requests",
+        "beautifulsoup4",
+        "kubernetes",
     ],
-    package_data={
-        'spaceone': ['inventory/model/*/*/widget/*.yml']
-    },
+    package_data={"spaceone": ["inventory/model/*/*/widget/*.yml"]},
     zip_safe=False,
 )
