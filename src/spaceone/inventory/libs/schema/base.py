@@ -108,6 +108,13 @@ class ObjectMeta(Model):
     owner_references = ListType(ModelType(OwnerReference), serialize_when_none=False)
 
 
+class ListMeta(Model):
+    _continue = StringType(serialize_when_none=False)
+    remaining_item_count = IntType(serialize_when_none=False)
+    resource_version = StringType(serialize_when_none=False)
+    self_link = StringType(serialize_when_none=False)
+
+
 class PodAffinityTerm(Model):
     label_selector = ModelType(LabelSelector, serialize_when_none=False)
     namespace_selector = ModelType(LabelSelector, serialize_when_none=False)
@@ -720,10 +727,40 @@ class PodTemplateSpec(Model):
     spec = ModelType(PodSpec, serialize_when_none=False)
 
 
+class PodFailurePolicyOnPodConditionsPattern(Model):
+    status = StringType(serialize_when_none=False)
+    type = StringType(serialize_when_none=False)
+
+
+class PodFailurePolicyOnExitCodesRequirement(Model):
+    containerName = StringType(serialize_when_none=False)
+    operator = StringType(serialize_when_none=False)
+    values = ListType(IntType, serialize_when_none=False)
+
+
+class PodFailurePolicyRule(Model):
+    action = StringType(serialize_when_none=False)
+    on_exit_codes = ModelType(
+        PodFailurePolicyOnExitCodesRequirement, serialize_when_none=False
+    )
+    on_pod_conditions = ListType(
+        ModelType(PodFailurePolicyOnPodConditionsPattern), serialize_when_none=False
+    )
+
+
+class PodFailurePolicy(Model):
+    rules = ListType(ModelType(PodFailurePolicyRule), serialize_when_none=False)
+
+
 class PortStatus(Model):
     error = StringType(serialize_when_none=False)
     port = StringType(serialize_when_none=False)
     protocol = StringType(choices=("TCP", "UDP", "SCTP"), serialize_when_none=False)
+
+
+class UncountedTerminatedPods(Model):
+    failed = ListType(StringType, serialize_when_none=False)
+    succeeded = ListType(StringType, serialize_when_none=False)
 
 
 class LoadBalancerIngress(Model):

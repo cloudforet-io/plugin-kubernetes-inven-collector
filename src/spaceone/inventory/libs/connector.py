@@ -1,9 +1,8 @@
-import os
 import logging
 
 from kubernetes import client
-from spaceone.core.connector import BaseConnector
 from kubernetes.config.kube_config import KubeConfigLoader
+from spaceone.core.connector import BaseConnector
 
 DEFAULT_SCHEMA = "google_oauth_client_id"
 _LOGGER = logging.getLogger(__name__)
@@ -45,6 +44,7 @@ class KubernetesConnector(BaseConnector):
         self.api_extensions_v1_client = client.ApiextensionsV1Api(self.config)
         # Disable api model verification for event api
         self.event_v1_client = client.EventsV1Api(self.config)
+        self.batch_v1_client = client.BatchV1Api(self.config)
 
     def verify(self, **kwargs):
         if self.client is None:
