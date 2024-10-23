@@ -3,15 +3,11 @@ import os
 from spaceone.inventory.libs.common_parser import *
 from spaceone.inventory.libs.schema.metadata.dynamic_widget import (
     CardWidget,
-    ChartWidget,
 )
 from spaceone.inventory.libs.schema.metadata.dynamic_field import (
     TextDyField,
     SearchField,
     DateTimeDyField,
-    ListDyField,
-    EnumDyField,
-    SizeField,
 )
 from spaceone.inventory.libs.schema.cloud_service_type import (
     CloudServiceTypeResource,
@@ -27,7 +23,7 @@ count_by_cluster_conf = os.path.join(current_dir, "widget/count_by_cluster.yml")
 
 cst_role = CloudServiceTypeResource()
 cst_role.name = "Role"
-cst_role.provider = "kubernetes"
+cst_role.provider = "k8s"
 cst_role.group = "Authorization"
 cst_role.service_code = "Role"
 cst_role.is_primary = True

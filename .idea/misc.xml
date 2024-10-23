@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="true" />
+  <component name="Black">
+    <option name="sdkName" value="Python 3.11 (plugin-kubernetes-inven-collector) (2)" />
   </component>
 </project>

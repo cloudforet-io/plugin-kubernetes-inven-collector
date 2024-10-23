@@ -3,15 +3,11 @@ import os
 from spaceone.inventory.libs.common_parser import *
 from spaceone.inventory.libs.schema.metadata.dynamic_widget import (
     CardWidget,
-    ChartWidget,
 )
 from spaceone.inventory.libs.schema.metadata.dynamic_field import (
     TextDyField,
     SearchField,
     DateTimeDyField,
-    ListDyField,
-    EnumDyField,
-    SizeField,
 )
 from spaceone.inventory.libs.schema.cloud_service_type import (
     CloudServiceTypeResource,
@@ -27,7 +23,7 @@ count_by_cluster_conf = os.path.join(current_dir, "widget/count_by_cluster.yml")
 
 cst_release = CloudServiceTypeResource()
 cst_release.name = "Release"
-cst_release.provider = "kubernetes"
+cst_release.provider = "k8s"
 cst_release.group = "Helm"
 cst_release.service_code = "Release"
 cst_release.is_primary = True

@@ -3,15 +3,11 @@ import os
 from spaceone.inventory.libs.common_parser import *
 from spaceone.inventory.libs.schema.metadata.dynamic_widget import (
     CardWidget,
-    ChartWidget,
 )
 from spaceone.inventory.libs.schema.metadata.dynamic_field import (
     TextDyField,
     SearchField,
     DateTimeDyField,
-    ListDyField,
-    EnumDyField,
-    SizeField,
 )
 from spaceone.inventory.libs.schema.cloud_service_type import (
     CloudServiceTypeResource,
@@ -27,7 +23,7 @@ count_by_cluster_conf = os.path.join(current_dir, "widget/count_by_cluster.yml")
 
 cst_stateful_set = CloudServiceTypeResource()
 cst_stateful_set.name = "StatefulSet"
-cst_stateful_set.provider = "kubernetes"
+cst_stateful_set.provider = "k8s"
 cst_stateful_set.group = "WorkLoad"
 cst_stateful_set.service_code = "StatefulSet"
 cst_stateful_set.is_primary = False

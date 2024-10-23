@@ -3,15 +3,11 @@ import os
 from spaceone.inventory.libs.common_parser import *
 from spaceone.inventory.libs.schema.metadata.dynamic_widget import (
     CardWidget,
-    ChartWidget,
 )
 from spaceone.inventory.libs.schema.metadata.dynamic_field import (
     TextDyField,
     SearchField,
     DateTimeDyField,
-    ListDyField,
-    EnumDyField,
-    SizeField,
 )
 from spaceone.inventory.libs.schema.cloud_service_type import (
     CloudServiceTypeResource,
@@ -27,7 +23,7 @@ count_by_cluster_conf = os.path.join(current_dir, "widget/count_by_cluster.yml")
 
 cst_storage_class = CloudServiceTypeResource()
 cst_storage_class.name = "StorageClass"
-cst_storage_class.provider = "kubernetes"
+cst_storage_class.provider = "k8s"
 cst_storage_class.group = "Storage"
 cst_storage_class.service_code = "StorageClass"
 cst_storage_class.is_primary = True

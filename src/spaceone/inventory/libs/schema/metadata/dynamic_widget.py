@@ -5,7 +5,6 @@ from schematics.types import (
     BooleanType,
     ModelType,
     PolyModelType,
-    DictType,
 )
 from .dynamic_field import (
     TextDyField,
@@ -248,7 +247,7 @@ class BaseDynamicWidget(Model):
 
         # Query : filter
         filter = [
-            {"key": "provider", "value": "kubernetes", "operator": "eq"},
+            {"key": "provider", "value": "k8s", "operator": "eq"},
             {
                 "key": "cloud_service_group",
                 "value": cloud_service_group,
