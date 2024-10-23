@@ -3,3 +3,4 @@ MarkupSafe>=2.0.0rc2
 requests
 beautifulsoup4
 kubernetes
+grpcio
