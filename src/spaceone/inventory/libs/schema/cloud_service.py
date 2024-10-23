@@ -36,7 +36,7 @@ class CloudServiceMeta(BaseMetaData):
 
 
 class CloudServiceResource(Model):
-    provider = StringType(default="kubernetes")
+    provider = StringType(default="k8s")
     account = StringType()
     instance_type = StringType(serialize_when_none=False)
     instance_size = FloatType(serialize_when_none=False)
@@ -71,7 +71,7 @@ class CloudServiceResponse(BaseResponse):
 
 class ErrorResource(Model):
     resource_type = StringType(default="inventory.CloudService")
-    provider = StringType(default="kubernetes")
+    provider = StringType(default="k8s")
     cloud_service_group = StringType(default="Workload", serialize_when_none=False)
     cloud_service_type = StringType(default="Pod", serialize_when_none=False)
     resource_id = StringType(serialize_when_none=False)

@@ -21,7 +21,7 @@ count_by_cluster_conf = os.path.join(current_dir, "widget/count_by_cluster.yml")
 
 cst_job = CloudServiceTypeResource()
 cst_job.name = "Job"
-cst_job.provider = "kubernetes"
+cst_job.provider = "k8s"
 cst_job.group = "WorkLoad"
 cst_job.service_code = "Job"
 cst_job.is_primary = True
